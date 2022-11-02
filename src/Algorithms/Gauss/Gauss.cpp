@@ -1,6 +1,6 @@
 #include "Gauss.h"
 namespace s21 {
-int Gauss::levels_ = 2;
+int Gauss::levels_ = 3;
 int Gauss::threads_per_level_ = 2;
 S21Matrix Gauss::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
     S21Matrix matrix(matrices[0]), result;
@@ -119,6 +119,30 @@ void Gauss::SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i,
     };
     for (int thread_id = 0; thread_id < 2; ++thread_id) {
         threads[thread_id + 2] = new std::thread(thread_func, thread_id);
+    }
+    JoinThreadsFromTo(threads, level);
+    DeleteThreadsFromTo(threads, level);
+}
+
+void Gauss::ThirdLevelParallelization(S21Matrix& matrix, double& tmp, std::vector<std::thread*> threads) {
+//    for (int i = 0; i < matrix.get_rows(); ++i) {
+//        tmp = matrix(i, i);
+//        FirstLevelParallelization(matrix, tmp, i, threads);
+//        SecondLevelParallelization(matrix, tmp, i, threads);
+//    }
+    int level = 3;
+    auto thread_func = [&matrix, &tmp, &threads](int thread_id) {
+        int start_index = matrix.get_rows() * (thread_id / 2);
+        int end_index = matrix.get_rows() - (double)matrix.get_rows() / 2 * thread_id;
+
+        for (int i = start_index; i < end_index; ++i) {
+            tmp = matrix(i, i);
+            FirstLevelParallelization(matrix, tmp, i, threads);
+            SecondLevelParallelization(matrix, tmp, i, threads);
+        }
+    };
+    for (int thread_id = 0; thread_id < 2; ++thread_id) {
+        threads[thread_id + 4] = new std::thread(thread_func, thread_id);
     }
     JoinThreadsFromTo(threads, level);
     DeleteThreadsFromTo(threads, level);
