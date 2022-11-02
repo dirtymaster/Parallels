@@ -80,7 +80,7 @@ void Gauss::FirstLevelParallelization(S21Matrix& matrix, double& tmp, int i,
             matrix(i, j) /= tmp;
         }
     };
-    for (int thread_id = 0; thread_id < 2; ++thread_id) {
+    for (int thread_id = 0; thread_id < threads_per_level_; ++thread_id) {
         threads[thread_id] = new std::thread(thread_func, thread_id);
     }
     JoinThreadsFromTo(threads, level);
@@ -98,7 +98,7 @@ void Gauss::FirstLevelParallelization2(S21Matrix& matrix, double tmp, int i, int
             matrix(j, k) -= tmp * matrix(i, k);
         }
     };
-    for (int thread_id = 0; thread_id < 2; ++thread_id) {
+    for (int thread_id = 0; thread_id < threads_per_level_; ++thread_id) {
         threads[thread_id] = new std::thread(thread_func, thread_id);
     }
     JoinThreadsFromTo(threads, level);
@@ -117,8 +117,8 @@ void Gauss::SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i,
             Gauss::FirstLevelParallelization2(matrix, tmp, i, j, threads);
         }
     };
-    for (int thread_id = 0; thread_id < 2; ++thread_id) {
-        threads[thread_id + 2] = new std::thread(thread_func, thread_id);
+    for (int thread_id = 0; thread_id < threads_per_level_; ++thread_id) {
+        threads[thread_id + (level - 1) * threads_per_level_] = new std::thread(thread_func, thread_id);
     }
     JoinThreadsFromTo(threads, level);
     DeleteThreadsFromTo(threads, level);
@@ -141,8 +141,8 @@ void Gauss::ThirdLevelParallelization(S21Matrix& matrix, double& tmp, std::vecto
             SecondLevelParallelization(matrix, tmp, i, threads);
         }
     };
-    for (int thread_id = 0; thread_id < 2; ++thread_id) {
-        threads[thread_id + 4] = new std::thread(thread_func, thread_id);
+    for (int thread_id = 0; thread_id < threads_per_level_; ++thread_id) {
+        threads[thread_id + (level - 1) * threads_per_level_] = new std::thread(thread_func, thread_id);
     }
     JoinThreadsFromTo(threads, level);
     DeleteThreadsFromTo(threads, level);
