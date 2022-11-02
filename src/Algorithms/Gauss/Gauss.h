@@ -22,8 +22,9 @@ private:
     static void FirstLevelParallelization(S21Matrix& matrix, double& tmp, int i, std::vector<std::thread*> threads);
     static void FirstLevelParallelization2(S21Matrix& matrix, double tmp, int i, int j,
                                         std::vector<std::thread*> threads);
-    static void SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i, std::vector<std::thread*> threads);
-    static void ThirdLevelParallelization(S21Matrix& matrix, double& tmp, std::vector<std::thread*> threads);
+//    static void SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i, std::vector<std::thread*> threads);
+    static void FirstLevelParallelization3(S21Matrix& matrix, S21Matrix& result, double tmp, int i, std::vector<std::thread*> threads);
+//    static void SecondLevelParallelization2(S21Matrix& matrix, S21Matrix& result, double tmp, std::vector<std::thread*> threads);
     static void DeleteThreadsFromTo(std::vector<std::thread*>& threads, int level);
     static void JoinThreadsFromTo(std::vector<std::thread*>& threads, int level);
 };

@@ -41,7 +41,7 @@ void ConsoleEngine::start() {
 
 S21Matrix ConsoleEngine::RequestMatrixFromUser() {
 //    std::string filename = RequestFilenameFromUser();
-    std::string filename = "../TextFiles/GaussMethod1.txt";
+    std::string filename = "../TextFiles/GaussMethod2.txt";
     S21Matrix result;
     std::fstream fs;
     fs.open(filename, std::fstream::in);
