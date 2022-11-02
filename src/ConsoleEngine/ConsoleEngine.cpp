@@ -23,7 +23,11 @@ void ConsoleEngine::start() {
             case GAUSS_ALGORITHM:
                 if (abstract_algorithm_) delete abstract_algorithm_;
                 abstract_algorithm_ = new Gauss;
-                PrintMatrix(abstract_algorithm_->SolveWithoutUsingParallelism({RequestMatrixFromUser()}));
+                if (RequestUseParallelismOrNot() == USE) {
+                    PrintMatrix(abstract_algorithm_->SolveUsingParallelism({RequestMatrixFromUser()}));
+                } else {
+                    PrintMatrix(abstract_algorithm_->SolveWithoutUsingParallelism({RequestMatrixFromUser()}));
+                }
                 continue;
             case WINOGRAD_ALGORITHM:
                 std::cout << "Not implemented" << std::endl;
@@ -36,7 +40,8 @@ void ConsoleEngine::start() {
 }
 
 S21Matrix ConsoleEngine::RequestMatrixFromUser() {
-    std::string filename = RequestFilenameFromUser();
+//    std::string filename = RequestFilenameFromUser();
+    std::string filename = "../TextFiles/GaussMethod1.txt";
     S21Matrix result;
     std::fstream fs;
     fs.open(filename, std::fstream::in);
@@ -75,5 +80,16 @@ void ConsoleEngine::PrintMatrix(S21Matrix matrix) {
         }
         std::cout << std::endl;
     }
+}
+
+int ConsoleEngine::RequestUseParallelismOrNot() {
+    std::cout << use_parallelism_or_not_;
+    int answer;
+    std::cin >> answer;
+    if (answer != 1 && answer != 2) {
+        std::cout << "Enter 1 or 2." << std::endl;
+        answer = RequestUseParallelismOrNot();
+    }
+    return answer;
 }
 }  // namespace s21

@@ -2,6 +2,8 @@
 #define A3_PARALLELS_0_MASTER_GAUSS_H
 
 #include <iostream>
+#include <mutex>
+#include <thread>
 
 #include "../AbstractAlgorithm.h"
 
@@ -10,7 +12,7 @@ class Gauss : public AbstractAlgorithm {
 public:
     Gauss() {}
     S21Matrix SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices);
-    S21Matrix SolveUsingParallelism(std::vector<S21Matrix> matrices) { return S21Matrix(); }
+    S21Matrix SolveUsingParallelism(std::vector<S21Matrix> matrices);
     std::vector<int> MeasureTime() { return std::vector<int>(); }
     void PrintResults(std::vector<int> times) {}
 };
