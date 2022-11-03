@@ -1,7 +1,15 @@
 #include "ConsoleEngine.h"
 namespace s21 {
+
+std::string ConsoleEngine::menu_options_ =
+    ("Menu options:\n"
+     "\t 1. Solve salesman problem using and algorithm.\n"
+     "\t 2. Solve SLAE using the Gauss method.\n"
+     "\t 3. Multiply matrices using the Winograd algorithm\n"
+     "\t 0. Close the application.\n");
+
 ConsoleEngine::~ConsoleEngine() {
-    if (abstract_algorithm_) delete abstract_algorithm_;
+    if (!abstract_algorithm_) delete abstract_algorithm_;
 }
 
 void ConsoleEngine::start() {
@@ -21,27 +29,38 @@ void ConsoleEngine::start() {
                 std::cout << "Not implemented" << std::endl;
                 continue;
             case GAUSS_ALGORITHM:
-                if (abstract_algorithm_) delete abstract_algorithm_;
+                if (!abstract_algorithm_) delete abstract_algorithm_;
                 abstract_algorithm_ = new Gauss;
-                if (RequestUseParallelismOrNot() == USE) {
-                    PrintMatrix(abstract_algorithm_->SolveUsingParallelism({RequestMatrixFromUser()}));
-                } else {
-                    PrintMatrix(abstract_algorithm_->SolveWithoutUsingParallelism({RequestMatrixFromUser()}));
-                }
+                PrintResults();
                 continue;
             case WINOGRAD_ALGORITHM:
                 std::cout << "Not implemented" << std::endl;
                 continue;
             case EXIT:
                 break;
+            default:
+                std::cout << "Enter number from 0 to 3" << std::endl;
+                continue;
         }
         break;
     }
 }
 
+void ConsoleEngine::PrintResults() {
+    S21Matrix matrix = RequestMatrixFromUser();
+    int number_of_repetitions = RequestNumberOfRepetitions();
+    std::cout << "Output without using parallelism:" << std::endl;
+    PrintMatrix(abstract_algorithm_->SolveWithoutUsingParallelism({matrix}));
+    std::cout << "Output using parallelism:" << std::endl;
+    PrintMatrix(abstract_algorithm_->SolveUsingParallelism({matrix}));
+    std::pair<int, int> result = abstract_algorithm_->MeasureTime({matrix}, number_of_repetitions);
+    std::cout << "Seconds spent without using parallelism: " << result.first << std::endl;
+    std::cout << "Seconds spent using parallelism: " << result.second << std::endl;
+}
+
 S21Matrix ConsoleEngine::RequestMatrixFromUser() {
-//    std::string filename = RequestFilenameFromUser();
-    std::string filename = "../TextFiles/GaussMethod2.txt";
+    std::string filename = RequestFilenameFromUser();
+    //    std::string filename = "../TextFiles/GaussMethod3.txt";
     S21Matrix result;
     std::fstream fs;
     fs.open(filename, std::fstream::in);
@@ -54,7 +73,7 @@ S21Matrix ConsoleEngine::RequestMatrixFromUser() {
     if (rows <= 0 || cols <= 0) return result;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            int value;
+            double value;
             if (!(fs >> value)) return S21Matrix();
             result(i, j) = value;
         }
@@ -62,8 +81,8 @@ S21Matrix ConsoleEngine::RequestMatrixFromUser() {
     return result;
 }
 
-const std::string ConsoleEngine::RequestFilenameFromUser() {
-    std::cout << "Enter the text file name:";
+std::string ConsoleEngine::RequestFilenameFromUser() {
+    std::cout << "Enter the text file name: ";
     std::string filename;
     std::cin >> filename;
     return filename;
@@ -82,14 +101,14 @@ void ConsoleEngine::PrintMatrix(S21Matrix matrix) {
     }
 }
 
-int ConsoleEngine::RequestUseParallelismOrNot() {
-    std::cout << use_parallelism_or_not_;
-    int answer;
-    std::cin >> answer;
-    if (answer != 1 && answer != 2) {
-        std::cout << "Enter 1 or 2." << std::endl;
-        answer = RequestUseParallelismOrNot();
+int ConsoleEngine::RequestNumberOfRepetitions() {
+    std::cout << "Enter the number of repetitions: ";
+    int number;
+    std::cin >> number;
+    if (number < 1) {
+        std::cout << "The number must be greater than zero." << std::endl;
+        number = RequestNumberOfRepetitions();
     }
-    return answer;
+    return number;
 }
 }  // namespace s21
