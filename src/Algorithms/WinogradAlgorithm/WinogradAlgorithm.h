@@ -2,6 +2,7 @@
 #ifndef PARALLELS_WINOGRADALGORITHM_H
 #define PARALLELS_WINOGRADALGORITHM_H
 
+#include <thread>
 #include "../AbstractAlgorithm.h"
 
 namespace s21 {
@@ -16,12 +17,14 @@ private:
     double *column_factors_;
     int len_;
 
-    void CalculateRowFactors(S21Matrix &M, start_ind, int end_ind);
+    void CalculateRowFactors(S21Matrix &M, int start_ind, int end_ind);
     void CalculateColumnFactors(S21Matrix &M, int start_ind, int end_ind);
     void CalculateResultMatrixValues(S21Matrix &res, S21Matrix &M1, S21Matrix &M2,
                                      int start_ind, int end_ind);
     void HandleOddDimension(S21Matrix &res, S21Matrix &M1, S21Matrix &M2,
                             int start_ind, int end_ind);
+    void CalculatePartOfMatrix(S21Matrix &res, S21Matrix &M1, S21Matrix &M2,
+                               int start_ind, int end_ind, int start2, int end2);
 };
 
 }
