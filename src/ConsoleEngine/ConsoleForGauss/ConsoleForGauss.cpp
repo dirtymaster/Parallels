@@ -13,8 +13,10 @@ void ConsoleForGauss::PrintResult() {
     PrintMatrix(result_without_using_parallelism_);
     std::cout << "Output using parallelism:" << std::endl;
     PrintMatrix(result_using_parallelism_);
-    std::cout << "Seconds spent without using parallelism: " << times_.first << std::endl;
-    std::cout << "Seconds spent using parallelism: " << times_.second << std::endl;
+    if (!result_without_using_parallelism_.is_empty() && !result_using_parallelism_.is_empty()) {
+        std::cout << "Seconds spent without using parallelism: " << times_.first << std::endl;
+        std::cout << "Seconds spent using parallelism: " << times_.second << std::endl;
+    }
 }
 
 void ConsoleForGauss::RunAlgorithm() {
@@ -30,7 +32,7 @@ void ConsoleForGauss::RequestParamsFromUser() {
 
 S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
     //    std::string filename = RequestFilenameFromUser();
-    std::string filename = "../TextFiles/GaussMethod3.txt";
+    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles//GaussMethod3.txt";
     S21Matrix result;
     std::fstream fs;
     fs.open(filename, std::fstream::in);
