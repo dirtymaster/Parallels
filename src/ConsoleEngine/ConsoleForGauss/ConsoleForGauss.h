@@ -22,13 +22,14 @@ private:
     S21Matrix RequestMatrixFromUser();
     int RequestNumberOfRepetitions();
     void PrintMatrix(S21Matrix matrix);
+    void GenerateRandomMatrix();
 
     AbstractAlgorithm *gauss_algorithm_;
     S21Matrix matrix_;
     int number_of_repetitions_;
     S21Matrix result_without_using_parallelism_;
     S21Matrix result_using_parallelism_;
-    std::pair<int, int> times_;
+    std::pair<double, double> times_;
 };
 }  // namespace s21
 

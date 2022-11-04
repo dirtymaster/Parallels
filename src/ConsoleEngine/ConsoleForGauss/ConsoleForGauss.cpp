@@ -9,6 +9,7 @@ ConsoleForGauss::ConsoleForGauss() {
 ConsoleForGauss::~ConsoleForGauss() { delete abstract_algorithm_; }
 
 void ConsoleForGauss::PrintResult() {
+//    GenerateRandomMatrix();
     std::cout << "Output without using parallelism:" << std::endl;
     PrintMatrix(result_without_using_parallelism_);
     std::cout << "Output using parallelism:" << std::endl;
@@ -32,7 +33,7 @@ void ConsoleForGauss::RequestParamsFromUser() {
 
 S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
     //    std::string filename = RequestFilenameFromUser();
-    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles//GaussMethod3.txt";
+    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
     S21Matrix result;
     std::fstream fs;
     fs.open(filename, std::fstream::in);
@@ -83,4 +84,19 @@ void ConsoleForGauss::PrintMatrix(S21Matrix matrix) {
         std::cout << std::endl;
     }
 }
+
+//void ConsoleForGauss::GenerateRandomMatrix() {
+//    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles//GaussMethod4.txt";
+//    std::fstream fs(filename, std::fstream::out);
+//    int rows = 999;
+//    int cols = 1000;
+//    fs << rows << " " << cols << std::endl;
+//    for (int i = 0; i < rows; ++i) {
+//        for (int j = 0; j < cols; ++j) {
+//            fs << rand() % 10 << " ";
+//        }
+//        fs << std::endl;
+//    }
+//}
+
 }  // namespace s21

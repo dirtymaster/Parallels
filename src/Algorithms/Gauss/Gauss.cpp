@@ -1,9 +1,9 @@
 #include "Gauss.h"
 namespace s21 {
-int Gauss::threads_in_level_ = 2;
+int Gauss::threads_in_level_;
 S21Matrix Gauss::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
     S21Matrix matrix(matrices[0]), result;
-    if (matrix.get_rows() >= 2 || matrix.get_cols() >= 3) {
+    if (matrix.get_rows() >= 2 && matrix.get_cols() == matrix.get_rows() + 1) {
         double tmp;
         result.set_rows(1);
         result.set_columns(matrix.get_cols() - 1);
@@ -32,7 +32,8 @@ S21Matrix Gauss::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
 
 S21Matrix Gauss::SolveUsingParallelism(std::vector<S21Matrix> matrices) {
     S21Matrix matrix(matrices[0]), result;
-    if (matrix.get_rows() >= 2 || matrix.get_cols() >= 3) {
+    if (matrix.get_rows() >= 2 && matrix.get_cols() == matrix.get_rows() + 1) {
+        threads_in_level_ = matrix.get_rows() < 4 ? matrix.get_rows() : 4;
         double tmp;
         result.set_rows(1);
         result.set_columns(matrix.get_cols() - 1);
@@ -64,6 +65,7 @@ void Gauss::FirstLevelParallelization1(S21Matrix& matrix, double& tmp, int i) {
 void Gauss::DoWork1(S21Matrix& matrix, double& tmp, int i, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(matrix.get_rows(), i - 1, false);
+    std::mutex mtx;
 
     for (int j = start_and_end_indices.first[thread_id]; j > start_and_end_indices.second[thread_id]; --j) {
         matrix(i, j) /= tmp;
@@ -81,6 +83,7 @@ void Gauss::FirstLevelParallelization2(S21Matrix& matrix, double tmp, int i, int
 void Gauss::DoWork2(S21Matrix& matrix, double tmp, int i, int j, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(matrix.get_rows(), i - 1, false);
+    std::mutex mtx;
 
     for (int k = start_and_end_indices.first[thread_id]; k > start_and_end_indices.second[thread_id]; --k) {
         matrix(j, k) -= tmp * matrix(i, k);
@@ -98,25 +101,30 @@ void Gauss::SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i) {
 void Gauss::DoWork3(S21Matrix& matrix, double& tmp, int i, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(i + 1, matrix.get_rows(), true);
+    std::mutex mtx;
 
     for (int j = start_and_end_indices.first[thread_id]; j < start_and_end_indices.second[thread_id]; ++j) {
+        mtx.lock();
         tmp = matrix(j, i);
         FirstLevelParallelization2(matrix, tmp, i, j);
+        mtx.unlock();
     }
 }
 
 std::pair<std::vector<int>, std::vector<int>> Gauss::InitializeStartAndEndIndices(
-    int start_index0, int end_index1, bool start_is_less_than_end) {
+    int start_index, int end_index, bool start_is_less_than_end) {
     std::vector<int> start_indices(threads_in_level_);
     std::vector<int> end_indices(threads_in_level_);
-    start_indices[0] = start_index0;
-    end_indices[1] = end_index1;
-    if (start_is_less_than_end) {
-        end_indices[0] = start_indices[1] =
-            start_indices[0] + (double)(end_indices[1] - start_indices[0]) / threads_in_level_;
-    } else {
-        end_indices[0] = start_indices[1] =
-            start_indices[0] - (double)(start_indices[0] - end_indices[1]) / threads_in_level_;
+    start_indices[0] = start_index;
+    end_indices[threads_in_level_ - 1] = end_index;
+    for (int i = 1; i < threads_in_level_; ++i) {
+        if (start_is_less_than_end) {
+            end_indices[i - 1] = start_indices[i] =
+                start_indices[i - 1] + (double)(end_index - start_index) / threads_in_level_;
+        } else {
+            end_indices[i - 1] = start_indices[i] =
+                start_indices[i - 1] - (double)(start_index - end_index) / threads_in_level_;
+        }
     }
     return {start_indices, end_indices};
 }

@@ -2,6 +2,7 @@
 #define A3_PARALLELS_0_MASTER_GAUSS_H
 
 #include <iostream>
+#include <mutex>
 #include <thread>
 
 #include "../AbstractAlgorithm.h"
@@ -14,7 +15,6 @@ public:
 
 private:
     static int threads_in_level_;
-//    static std::vector<std::thread*> threads_;
     static void FirstLevelParallelization1(S21Matrix& matrix, double& tmp, int i);
     static void DoWork1(S21Matrix& matrix, double& tmp, int i, int thread_id);
     static void FirstLevelParallelization2(S21Matrix& matrix, double tmp, int i, int j);
@@ -22,7 +22,7 @@ private:
     static void SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i);
     static void DoWork3(S21Matrix& matrix, double& tmp, int i, int thread_id);
     static std::pair<std::vector<int>, std::vector<int>> InitializeStartAndEndIndices(
-        int start_index0, int end_index1, bool start_is_less_than_end);
+        int start_index, int end_index, bool start_is_less_than_end);
     static void JoinThreads(std::vector<std::thread>& threads);
 };
 }  // namespace s21
