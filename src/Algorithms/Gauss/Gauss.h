@@ -15,12 +15,14 @@ public:
 private:
     static int number_of_threads_;
     static std::vector<std::thread*> threads_;
-    static void Parallelization1(S21Matrix& matrix, double& tmp, int i);
+    static void FirstLevelParallelization1(S21Matrix& matrix, double& tmp, int i);
     static void DoWork1(S21Matrix& matrix, double& tmp, int i, int thread_id);
-    static void Parallelization2(S21Matrix& matrix, double tmp, int i, int j);
+    static void FirstLevelParallelization2(S21Matrix& matrix, double tmp, int i, int j);
     static void DoWork2(S21Matrix& matrix, double tmp, int i, int j, int thread_id);
-    static void Parallelization3(S21Matrix& matrix, S21Matrix& result, int i);
+    static void FirstLevelParallelization3(S21Matrix& matrix, S21Matrix& result, int i);
     static void DoWork3(S21Matrix& matrix, S21Matrix& result, int i, int thread_id);
+    static std::pair<std::vector<int>, std::vector<int>> InitializeStartAndEndIndices(
+        int start_index0, int end_index1, bool start_is_less_than_end);
     static void DeleteThreadsFromTo();
     static void JoinThreadsFromTo();
 };
