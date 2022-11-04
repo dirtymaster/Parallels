@@ -29,4 +29,4 @@ winograd: winograd_build winograd_start
 
 
 clean:
-	rm -rf *.out
+	rm -rf *.out *.out.dSYM

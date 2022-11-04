@@ -1,4 +1,5 @@
 #include "WinogradAlgorithm.h"
+#include <chrono>
 
 void Fullfill_matrix(s21::S21Matrix &m1) {
     double n = 1;
@@ -20,17 +21,27 @@ void Print_matrix(s21::S21Matrix m1) {
 }
 
 int main() {
-    s21::S21Matrix m1(3, 5);
-    s21::S21Matrix m2(5, 4);
+    s21::S21Matrix m1(1000, 1000);
+    s21::S21Matrix m2(1000, 1000);
 
     Fullfill_matrix(m1);
     Fullfill_matrix(m2);
-    Print_matrix(m1);
-    Print_matrix(m2);
+//    Print_matrix(m1);
+//    Print_matrix(m2);
 
     s21::WinogradAlgorithm algorithm;
+    auto start = std::chrono::high_resolution_clock::now();
     s21::S21Matrix res = algorithm.SolveWithoutUsingParallelism({m1, m2});
-    Print_matrix(res);
+    std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
+    printf("\nWinograd %lf:\n", duration.count());
+    //Print_matrix(res);
+
+    start = std::chrono::high_resolution_clock::now();
+    s21::S21Matrix m3 = m1 * m2;
+    duration = std::chrono::high_resolution_clock::now() - start;
+    printf("\nBasic %lf:\n", duration.count());
+    //Print_matrix(m3 );
+
 
     return 0;
 }
