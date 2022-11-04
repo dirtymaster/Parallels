@@ -8,5 +8,9 @@ winograd:
 	$(FLAGS) $(WINOGRAD) -o wingograd.out
 	./wingograd.out
 
+qwerty:
+	$(FLAGS) Algorithms/WinogradALgorithm/*.cpp DataStructures/Matrix/Matrix.cpp -o qwerty.out
+	./qwerty.out
+
 clean:
-	rm -rf winograd.out
+	rm -rf *.out

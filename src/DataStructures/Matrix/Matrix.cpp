@@ -84,7 +84,7 @@ void S21Matrix::mul_number(const double num) {
 }
 
 void S21Matrix::mul_matrix(const S21Matrix &other) {
-    if (_rows != other._cols || _cols != other._rows) {
+    if (_cols != other._rows) {
         throw "Mult error: Number of rows of the first matrix"
           "must be equal to number of columns of the second matrix";
     }
