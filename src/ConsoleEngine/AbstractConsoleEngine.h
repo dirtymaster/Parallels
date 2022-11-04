@@ -2,8 +2,8 @@
 #ifndef PARALLELS_ABSTRACTCONSOLEENGINE_H
 #define PARALLELS_ABSTRACTCONSOLEENGINE_H
 
-#include <string>
 #include <iostream>
+#include <string>
 
 using std::cout;
 using std::endl;
@@ -17,18 +17,22 @@ public:
 
     void start() {
         cout << start_message_ << endl;
-        RequestParamsFromUser();
-        RunAlgorithms();
-        PrintResult();
+        while (true) {
+            RequestParamsFromUser();
+            RunAlgorithm();
+            PrintResult();
+        }
     }
 
 protected:
     string start_message_;
     virtual void RequestParamsFromUser() = 0;
-    virtual void RunAlgorithms() = 0;
+    virtual void RunAlgorithm() = 0;
     virtual void PrintResult() = 0;
+
+    AbstractAlgorithm* abstract_algorithm_;
 };
 
-}
+}  // namespace s21
 
-#endif //PARALLELS_ABSTRACTCONSOLEENGINE_H
+#endif  // PARALLELS_ABSTRACTCONSOLEENGINE_H

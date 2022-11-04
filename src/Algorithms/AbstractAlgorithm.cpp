@@ -1,19 +1,22 @@
 #include "AbstractAlgorithm.h"
 
 namespace s21 {
-std::pair<int, int> AbstractAlgorithm::MeasureTime(std::vector<S21Matrix> matrices, int number_of_repetitions) {
-    std::pair<int, int> result;
-    unsigned int start_time = clock();
+std::pair<double, double> AbstractAlgorithm::MeasureTime(std::vector<S21Matrix> matrices,
+                                                   int number_of_repetitions) {
+    std::pair<double, double> result;
+    auto start_time = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < number_of_repetitions; ++i) {
         SolveWithoutUsingParallelism(matrices);
     }
-    result.first = (clock() - start_time) / CLOCKS_PER_SEC;  // без параллелизма
+    std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    result.first = duration.count();
 
-    start_time = clock();
+    start_time = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < number_of_repetitions; ++i) {
         SolveUsingParallelism(matrices);
     }
-    result.second = (clock() - start_time) / CLOCKS_PER_SEC;  // без параллелизма
+    duration = std::chrono::high_resolution_clock::now() - start_time;
+    result.second = duration.count();
     return result;
 }
 }  // namespace s21

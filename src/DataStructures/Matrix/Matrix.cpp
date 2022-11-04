@@ -164,4 +164,8 @@ void S21Matrix::set_columns(int new_cols) {
     (*this) = new_matrix;
 }
 
+bool S21Matrix::is_empty() {
+    return !get_rows() && !get_cols();
+}
+
 }  // namespace s21

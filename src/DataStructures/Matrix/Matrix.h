@@ -48,6 +48,8 @@ public:
     void operator-=(const S21Matrix &other);
     void operator*=(const S21Matrix &other);
     double &operator()(const int i, const int j);
+
+    bool is_empty();
 };
 
 }  // namespace s21
