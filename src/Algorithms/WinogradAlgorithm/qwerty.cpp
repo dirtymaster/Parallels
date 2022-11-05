@@ -21,8 +21,8 @@ void Print_matrix(s21::S21Matrix m1) {
 }
 
 int main() {
-    s21::S21Matrix m1(500, 500);
-    s21::S21Matrix m2(500, 500);
+    s21::S21Matrix m1(1000, 1000);
+    s21::S21Matrix m2(1000, 1000);
 
     Fullfill_matrix(m1);
     Fullfill_matrix(m2);
@@ -32,16 +32,19 @@ int main() {
     s21::S21Matrix res1 = algorithm.SolveWithoutUsingParallelism({m1, m2});
     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
     printf("\nWinograd without parallelism = %lf\n", duration.count());
+    //Print_matrix(res1);
 
     start = std::chrono::high_resolution_clock::now();
     s21::S21Matrix res2 = algorithm.SolveUsingParallelism({m1, m2});
     duration = std::chrono::high_resolution_clock::now() - start;
     printf("\nWinograd with parallelism = %lf:\n", duration.count());
+    //Print_matrix(res2);
 
     start = std::chrono::high_resolution_clock::now();
     s21::S21Matrix res3 = m1 * m2;
     duration = std::chrono::high_resolution_clock::now() - start;
     printf("\nBasic algo = %lf:\n", duration.count());
+    //Print_matrix(res3);
 
     if ((res1 == res2) && (res2 == res3)) {
         printf("Cool\n");
