@@ -53,9 +53,17 @@ S21Matrix WinogradAlgorithm::SolveUsingParallelism(std::vector <S21Matrix> matri
     column_factors_ = new double[M2.get_cols()];
     len_ = M1.get_cols() / 2;
     std::thread t1(&WinogradAlgorithm::CalculatePartOfMatrix, this, std::ref(result),
-                   std::ref(M1), std::ref(M2), 0, M1.get_rows() / 2, 0, M2.get_cols() / 2);
+                   std::ref(M1), std::ref(M2), 0, M1.get_rows() / 6, 0, M2.get_cols() / 6);
     std::thread t2(&WinogradAlgorithm::CalculatePartOfMatrix, this, std::ref(result),
-                   std::ref(M1), std::ref(M2), M1.get_rows() / 2, M1.get_rows(), M2.get_cols() / 2, M2.get_cols());
+                   std::ref(M1), std::ref(M2), M1.get_rows() / 6, 2 * M1.get_rows() / 6, M2.get_cols() / 6, 2 * M2.get_cols() / 6);
+    std::thread t3(&WinogradAlgorithm::CalculatePartOfMatrix, this, std::ref(result),
+                   std::ref(M1), std::ref(M2), 2 * M1.get_rows() / 6, 3 * M1.get_rows() / 6, 2 * M2.get_cols() / 6, 3 * M2.get_cols() / 6);
+    std::thread t4(&WinogradAlgorithm::CalculatePartOfMatrix, this, std::ref(result),
+                   std::ref(M1), std::ref(M2), 3 * M1.get_rows() / 6, 4 * M1.get_rows() / 6, 3 * M2.get_cols() / 6, 4 * M2.get_cols() / 6);
+    std::thread t5(&WinogradAlgorithm::CalculatePartOfMatrix, this, std::ref(result),
+                   std::ref(M1), std::ref(M2), 4 * M1.get_rows() / 6, 5 * M1.get_rows() / 6, 4 * M2.get_cols() / 6, 5 * M2.get_cols() / 6);
+    std::thread t6(&WinogradAlgorithm::CalculatePartOfMatrix, this, std::ref(result),
+                   std::ref(M1), std::ref(M2), 5 * M1.get_rows() / 6, 6 * M1.get_rows() / 6, 5 * M2.get_cols() / 6, 6 * M2.get_cols() / 6);
 
     //CalculatePartOfMatrix(result, M1, M2, 0, M1.get_rows(), M2.get_cols());
 //    CalculateRowFactors(M1, 0, M1.get_rows());
@@ -67,6 +75,10 @@ S21Matrix WinogradAlgorithm::SolveUsingParallelism(std::vector <S21Matrix> matri
 //    }
     t1.join();
     t2.join();
+    t3.join();
+    t4.join();
+    t5.join();
+    t6.join();
 
     delete[] row_factors_;
     delete[] column_factors_;
