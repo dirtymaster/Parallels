@@ -7,6 +7,9 @@
 
 #include "../AbstractAlgorithm.h"
 
+using std::vector;
+using std::thread;
+
 namespace s21 {
 class Gauss : public AbstractAlgorithm {
 public:
@@ -15,12 +18,16 @@ public:
 
 private:
     static int threads_in_level_;
-    static void FirstLevelParallelization1(S21Matrix& matrix, double& tmp, int i);
-    static void DoWork1(S21Matrix& matrix, double& tmp, int i, int thread_id);
-    static void FirstLevelParallelization2(S21Matrix& matrix, double tmp, int i, int j);
-    static void DoWork2(S21Matrix& matrix, double tmp, int i, int j, int thread_id);
-    static void SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i);
-    static void DoWork3(S21Matrix& matrix, double& tmp, int i, int thread_id);
+    static void DivideEquation(S21Matrix& matrix, double tmp, int i);
+    static void DivideEquationCycle(S21Matrix& matrix, double tmp, int i, int thread_id);
+    static void SubtractElementsInRow(S21Matrix& matrix, double tmp, int i, int j);
+    static void SubtractElementsInRowCycle(S21Matrix& matrix, double tmp, int i, int j, int thread_id);
+    static void SubtractElementsInMatrix(S21Matrix& matrix, int i);
+    static void SubtractElementsInMatrixCycle(S21Matrix& matrix, int i, int thread_id);
+    static void EquateResultsToRightValues(S21Matrix& matrix, S21Matrix& result);
+    static void EquateResultsToRightValuesCycle(S21Matrix& matrix, S21Matrix& result, int thread_id);
+    static void SubtractCalculatedVariables(S21Matrix& matrix, S21Matrix& result, int i);
+    static void SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i, int thread_id, std::mutex& mtx);
     static std::pair<std::vector<int>, std::vector<int>> InitializeStartAndEndIndices(
         int start_index, int end_index, bool start_is_less_than_end);
     static void JoinThreads(std::vector<std::thread>& threads);

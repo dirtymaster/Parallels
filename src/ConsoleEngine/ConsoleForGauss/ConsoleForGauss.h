@@ -30,6 +30,7 @@ private:
     S21Matrix result_without_using_parallelism_;
     S21Matrix result_using_parallelism_;
     std::pair<double, double> times_;
+    std::pair<S21Matrix, S21Matrix> results_;
 };
 }  // namespace s21
 

@@ -33,80 +33,111 @@ S21Matrix Gauss::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
 S21Matrix Gauss::SolveUsingParallelism(std::vector<S21Matrix> matrices) {
     S21Matrix matrix(matrices[0]), result;
     if (matrix.get_rows() >= 2 && matrix.get_cols() == matrix.get_rows() + 1) {
-        threads_in_level_ = matrix.get_rows() < 4 ? matrix.get_rows() : 4;
+        threads_in_level_ = 2;
         double tmp;
         result.set_rows(1);
         result.set_columns(matrix.get_cols() - 1);
 
         for (int i = 0; i < matrix.get_rows(); ++i) {
             tmp = matrix(i, i);
-            FirstLevelParallelization1(matrix, tmp, i);
-            SecondLevelParallelization(matrix, tmp, i);
+            DivideEquation(matrix, tmp, i);
+            SubtractElementsInMatrix(matrix, i);
         }
         result(0, matrix.get_rows() - 1) = matrix(matrix.get_rows() - 1, matrix.get_rows());
+        EquateResultsToRightValues(matrix, result);
         for (int i = matrix.get_rows() - 2; i >= 0; --i) {
-            result(0, i) = matrix(i, matrix.get_rows());
-            for (int j = i + 1; j < matrix.get_rows(); ++j) {
-                result(0, i) -= matrix(i, j) * result(0, j);
-            }
+            SubtractCalculatedVariables(matrix, result, i);
         }
     }
     return result;
 }
 
-void Gauss::FirstLevelParallelization1(S21Matrix& matrix, double& tmp, int i) {
+void Gauss::DivideEquation(S21Matrix& matrix, double tmp, int i) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
-        threads[thread_id] = std::thread(DoWork1, std::ref(matrix), std::ref(tmp), i, thread_id);
+        threads[thread_id] = std::thread(DivideEquationCycle, std::ref(matrix), tmp, i, thread_id);
     }
     JoinThreads(threads);
 }
 
-void Gauss::DoWork1(S21Matrix& matrix, double& tmp, int i, int thread_id) {
+void Gauss::DivideEquationCycle(S21Matrix& matrix, double tmp, int i, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(matrix.get_rows(), i - 1, false);
-    std::mutex mtx;
 
     for (int j = start_and_end_indices.first[thread_id]; j > start_and_end_indices.second[thread_id]; --j) {
         matrix(i, j) /= tmp;
     }
 }
 
-void Gauss::FirstLevelParallelization2(S21Matrix& matrix, double tmp, int i, int j) {
+void Gauss::SubtractElementsInRow(S21Matrix& matrix, double tmp, int i, int j) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
-        threads[thread_id] = std::thread(DoWork2, std::ref(matrix), tmp, i, j, thread_id);
+        threads[thread_id] = std::thread(SubtractElementsInRowCycle, std::ref(matrix), tmp, i, j, thread_id);
     }
     JoinThreads(threads);
 }
 
-void Gauss::DoWork2(S21Matrix& matrix, double tmp, int i, int j, int thread_id) {
+void Gauss::SubtractElementsInRowCycle(S21Matrix& matrix, double tmp, int i, int j, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(matrix.get_rows(), i - 1, false);
-    std::mutex mtx;
 
     for (int k = start_and_end_indices.first[thread_id]; k > start_and_end_indices.second[thread_id]; --k) {
         matrix(j, k) -= tmp * matrix(i, k);
     }
 }
 
-void Gauss::SecondLevelParallelization(S21Matrix& matrix, double& tmp, int i) {
+void Gauss::SubtractElementsInMatrix(S21Matrix& matrix, int i) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
-        threads[thread_id] = std::thread(DoWork3, std::ref(matrix), std::ref(tmp), i, thread_id);
+        threads[thread_id] = std::thread(SubtractElementsInMatrixCycle, std::ref(matrix), i, thread_id);
     }
     JoinThreads(threads);
 }
 
-void Gauss::DoWork3(S21Matrix& matrix, double& tmp, int i, int thread_id) {
+void Gauss::SubtractElementsInMatrixCycle(S21Matrix& matrix, int i, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(i + 1, matrix.get_rows(), true);
-    std::mutex mtx;
 
     for (int j = start_and_end_indices.first[thread_id]; j < start_and_end_indices.second[thread_id]; ++j) {
+        SubtractElementsInRow(matrix, matrix(j, i), i, j);
+    }
+}
+
+void Gauss::EquateResultsToRightValues(s21::S21Matrix& matrix, s21::S21Matrix& result) {
+    std::vector<std::thread> threads(threads_in_level_);
+    for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
+        threads[thread_id] = std::thread(EquateResultsToRightValuesCycle, std::ref(matrix), std::ref(result), thread_id);
+    }
+    JoinThreads(threads);
+}
+
+void Gauss::EquateResultsToRightValuesCycle(S21Matrix& matrix, S21Matrix& result, int thread_id) {
+    std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
+        InitializeStartAndEndIndices(matrix.get_rows() - 2, -1, false);
+
+    for (int i = start_and_end_indices.first[thread_id]; i > start_and_end_indices.second[thread_id]; --i) {
+        result(0, i) = matrix(i, matrix.get_rows());
+    }
+}
+
+void Gauss::SubtractCalculatedVariables(s21::S21Matrix& matrix, s21::S21Matrix& result, int i) {
+    std::vector<std::thread> threads(threads_in_level_);
+    std::mutex mtx;
+    for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
+        threads[thread_id] =
+            std::thread(SubtractCalculatedVariablesCycle, std::ref(matrix), std::ref(result), i, thread_id, std::ref(mtx));
+    }
+    JoinThreads(threads);
+}
+
+void Gauss::SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i, int thread_id, std::mutex& mtx) {
+    std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
+        InitializeStartAndEndIndices( i + 1, matrix.get_rows(), true);
+
+    for (int j = start_and_end_indices.first[thread_id]; j < start_and_end_indices.second[thread_id]; ++j) {
+        double calculated = matrix(i, j) * result(0, j);
         mtx.lock();
-        tmp = matrix(j, i);
-        FirstLevelParallelization2(matrix, tmp, i, j);
+        result(0, i) -= calculated;
         mtx.unlock();
     }
 }

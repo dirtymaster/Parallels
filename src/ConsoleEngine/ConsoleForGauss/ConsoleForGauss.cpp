@@ -9,11 +9,10 @@ ConsoleForGauss::ConsoleForGauss() {
 ConsoleForGauss::~ConsoleForGauss() { delete abstract_algorithm_; }
 
 void ConsoleForGauss::PrintResult() {
-//    GenerateRandomMatrix();
     std::cout << "Output without using parallelism:" << std::endl;
-    PrintMatrix(result_without_using_parallelism_);
+    PrintMatrix(results_.first);
     std::cout << "Output using parallelism:" << std::endl;
-    PrintMatrix(result_using_parallelism_);
+    PrintMatrix(results_.second);
     if (!result_without_using_parallelism_.is_empty() && !result_using_parallelism_.is_empty()) {
         std::cout << "Seconds spent without using parallelism: " << times_.first << std::endl;
         std::cout << "Seconds spent using parallelism: " << times_.second << std::endl;
@@ -23,10 +22,11 @@ void ConsoleForGauss::PrintResult() {
 void ConsoleForGauss::RunAlgorithm() {
     result_without_using_parallelism_ = abstract_algorithm_->SolveWithoutUsingParallelism({matrix_});
     result_using_parallelism_ = abstract_algorithm_->SolveUsingParallelism({matrix_});
-    times_ = abstract_algorithm_->MeasureTime({matrix_}, number_of_repetitions_);
+    times_ = abstract_algorithm_->MeasureTime({matrix_}, results_, number_of_repetitions_);
 }
 
 void ConsoleForGauss::RequestParamsFromUser() {
+//    GenerateRandomMatrix();
     matrix_ = RequestMatrixFromUser();
     number_of_repetitions_ = RequestNumberOfRepetitions();
 }
@@ -85,18 +85,18 @@ void ConsoleForGauss::PrintMatrix(S21Matrix matrix) {
     }
 }
 
-//void ConsoleForGauss::GenerateRandomMatrix() {
-//    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles//GaussMethod4.txt";
-//    std::fstream fs(filename, std::fstream::out);
-//    int rows = 999;
-//    int cols = 1000;
-//    fs << rows << " " << cols << std::endl;
-//    for (int i = 0; i < rows; ++i) {
-//        for (int j = 0; j < cols; ++j) {
-//            fs << rand() % 10 << " ";
-//        }
-//        fs << std::endl;
-//    }
-//}
+ void ConsoleForGauss::GenerateRandomMatrix() {
+     std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
+     std::fstream fs(filename, std::fstream::out);
+     int rows = 9999;
+     int cols = 10000;
+     fs << rows << " " << cols << std::endl;
+     for (int i = 0; i < rows; ++i) {
+         for (int j = 0; j < cols; ++j) {
+             fs << rand() % 10 << " ";
+         }
+         fs << std::endl;
+     }
+ }
 
 }  // namespace s21
