@@ -20,11 +20,10 @@ S21Matrix WinogradAlgorithm::SolveWithoutUsingParallelism(std::vector <S21Matrix
     column_factors_ = new double[M2_.get_cols()];
     len_ = M1_.get_cols() / 2;
 
-    CalculatePartOfMatrix(0, M1_.get_rows(), 0, M2_.get_cols());
+    PrepareColumnAndRowFactors(0, M1_.get_rows(),
+                               0, M2_.get_cols());
 
-    CalculateResultMatrixValues(0, M1_.get_rows());
-    if (M1_.get_cols() % 2 != 0)
-        HandleOddDimension(0, M1_.get_rows());
+    CalculateResult(0, M1_.get_rows());
 
     delete[] row_factors_;
     delete[] column_factors_;
@@ -48,34 +47,22 @@ S21Matrix WinogradAlgorithm::SolveUsingParallelism(std::vector <S21Matrix> matri
     row_factors_ = new double[M1_.get_rows()];
     column_factors_ = new double[M2_.get_cols()];
     len_ = M1_.get_cols() / 2;
-    int nmb_of_threads = 12;
+    int nmb_of_threads = 6;
     std::vector<std::thread> threads(nmb_of_threads);
 
     for (int i = 0; i < nmb_of_threads; i++) {
-        threads[i] = std::thread(&WinogradAlgorithm::CalculatePartOfMatrix, this,
+        threads[i] = std::thread(&WinogradAlgorithm::PrepareColumnAndRowFactors, this,
                                 i * M1_.get_rows() / nmb_of_threads, (i + 1) * M1_.get_rows() / nmb_of_threads,
                                 i * M1_.get_cols() / nmb_of_threads, (i + 1) * M2_.get_cols() / nmb_of_threads);
     }
 
-//    std::thread t1(&WinogradAlgorithm::CalculatePartOfMatrix, this,
-//                   0, M1_.get_rows() / 6, 0, M2_.get_cols() / 6);
-//    std::thread t2(&WinogradAlgorithm::CalculatePartOfMatrix, this,
-//                   M1_.get_rows() / 6, 2 * M1_.get_rows() / 6, M2_.get_cols() / 6, 2 * M2_.get_cols() / 6);
-//    std::thread t3(&WinogradAlgorithm::CalculatePartOfMatrix, this,
-//                   2 * M1_.get_rows() / 6, 3 * M1_.get_rows() / 6, 2 * M2_.get_cols() / 6, 3 * M2_.get_cols() / 6);
-//    std::thread t4(&WinogradAlgorithm::CalculatePartOfMatrix, this,
-//                   3 * M1_.get_rows() / 6, 4 * M1_.get_rows() / 6, 3 * M2_.get_cols() / 6, 4 * M2_.get_cols() / 6);
-//    std::thread t5(&WinogradAlgorithm::CalculatePartOfMatrix, this,
-//                   4 * M1_.get_rows() / 6, 5 * M1_.get_rows() / 6, 4 * M2_.get_cols() / 6, 5 * M2_.get_cols() / 6);
-//    std::thread t6(&WinogradAlgorithm::CalculatePartOfMatrix, this,
-//                   5 * M1_.get_rows() / 6, 6 * M1_.get_rows() / 6, 5 * M2_.get_cols() / 6, 6 * M2_.get_cols() / 6);
 
     for (int i = 0; i < nmb_of_threads; i++) {
         threads[i].join();
     }
 
     for (int i = 0; i < nmb_of_threads; i++) {
-        threads[i] = std::thread(&WinogradAlgorithm::CalculateTmp, this,
+        threads[i] = std::thread(&WinogradAlgorithm::CalculateResult, this,
                                  i * M1_.get_rows() / nmb_of_threads, (i + 1) * M1_.get_rows() / nmb_of_threads);
     }
 
@@ -126,18 +113,13 @@ void WinogradAlgorithm::HandleOddDimension(int start_ind, int end_ind) {
     }
 }
 
-void WinogradAlgorithm::CalculatePartOfMatrix(int start_ind1, int end_ind1,
-                                                int start_ind2, int end_ind2) {
+void WinogradAlgorithm::PrepareColumnAndRowFactors(int start_ind1, int end_ind1,
+                                                   int start_ind2, int end_ind2) {
     CalculateRowFactors(start_ind1, end_ind1);
     CalculateColumnFactors(start_ind2, end_ind2);
-//    CalculateResultMatrixValues(start_ind1, end_ind1);
-//    if (M1_.get_cols() % 2 != 0)
-//        HandleOddDimension(start_ind1, end_ind1);
-
-
 }
 
-void WinogradAlgorithm::CalculateTmp(int start_ind, int end_ind) {
+void WinogradAlgorithm::CalculateResult(int start_ind, int end_ind) {
     CalculateResultMatrixValues(start_ind, end_ind);
     if (M1_.get_cols() % 2 != 0)
         HandleOddDimension(start_ind, end_ind);

@@ -24,9 +24,9 @@ private:
     void CalculateColumnFactors(int start_ind, int end_ind);
     void CalculateResultMatrixValues(int start_ind, int end_ind);
     void HandleOddDimension(int start_ind, int end_ind);
-    void CalculatePartOfMatrix(int start_ind1, int end_ind1,
-                               int start_ind2, int end_ind2);
-    void CalculateTmp(int start_ind, int end_ind);
+    void PrepareColumnAndRowFactors(int start_ind1, int end_ind1,
+                                    int start_ind2, int end_ind2);
+    void CalculateResult(int start_ind, int end_ind);
 };
 
 }
