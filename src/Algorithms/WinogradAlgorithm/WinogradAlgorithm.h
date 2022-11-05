@@ -15,16 +15,17 @@ public:
 private:
     double *row_factors_;
     double *column_factors_;
+    S21Matrix M1_;
+    S21Matrix M2_;
+    S21Matrix res_;
     int len_;
 
-    void CalculateRowFactors(S21Matrix &M, int start_ind, int end_ind);
-    void CalculateColumnFactors(S21Matrix &M, int start_ind, int end_ind);
-    void CalculateResultMatrixValues(S21Matrix &res, S21Matrix &M1, S21Matrix &M2,
-                                     int start_ind, int end_ind);
-    void HandleOddDimension(S21Matrix &res, S21Matrix &M1, S21Matrix &M2,
-                            int start_ind, int end_ind);
-    void CalculatePartOfMatrix(S21Matrix &res, S21Matrix &M1, S21Matrix &M2,
-                               int start_ind, int end_ind, int start2, int end2);
+    void CalculateRowFactors(int start_ind, int end_ind);
+    void CalculateColumnFactors(int start_ind, int end_ind);
+    void CalculateResultMatrixValues(int start_ind, int end_ind);
+    void HandleOddDimension(int start_ind, int end_ind);
+    void CalculatePartOfMatrix(int start_ind1, int end_ind1,
+                               int start_ind2, int end_ind2);
 };
 
 }
