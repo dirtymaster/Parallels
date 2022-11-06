@@ -21,35 +21,37 @@ void Print_matrix(s21::S21Matrix m1) {
 }
 
 int main() {
-    s21::S21Matrix m1(499, 499);
-    s21::S21Matrix m2(499, 499);
+//    s21::S21Matrix m1(499, 499);
+//    s21::S21Matrix m2(499, 499);
 
-//    s21::S21Matrix m1(1001, 1001);
-//    s21::S21Matrix m2(1001, 1001);
+    s21::S21Matrix m1(1001, 1001);
+    s21::S21Matrix m2(1001, 1001);
 
     Fullfill_matrix(m1);
     Fullfill_matrix(m2);
 
     s21::WinogradAlgorithm algorithm;
     auto start = std::chrono::high_resolution_clock::now();
-    s21::S21Matrix res1 = algorithm.SolveWithoutUsingParallelism({m1, m2});
+    s21::S21Matrix res1 = algorithm.SolveWithoutParallelism(&m1, &m2);
     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
     printf("\nWinograd without parallelism = %lf\n", duration.count());
-    //Print_matrix(res1);
 
     start = std::chrono::high_resolution_clock::now();
-    s21::S21Matrix res2 = algorithm.SolveUsingParallelism({m1, m2});
+    s21::S21Matrix res2 = algorithm.SolveWithPipelineParallelism(&m1, &m2);
     duration = std::chrono::high_resolution_clock::now() - start;
-    printf("\nWinograd with parallelism = %lf:\n", duration.count());
-    //Print_matrix(res2);
+    printf("\nWinograd with pipeline parallelism = %lf:\n", duration.count());
 
     start = std::chrono::high_resolution_clock::now();
-    s21::S21Matrix res3 = m1 * m2;
+    s21::S21Matrix res3 = algorithm.SolveWithClassicParallelism(&m1, &m2);
     duration = std::chrono::high_resolution_clock::now() - start;
-    printf("\nBasic algo = %lf:\n", duration.count());
-    //Print_matrix(res3);
+    printf("\nWinograd with classic parallelism = %lf:\n", duration.count());
 
-    if ((res1 == res2) && (res2 == res3)) {
+    start = std::chrono::high_resolution_clock::now();
+    s21::S21Matrix res4 = m1 * m2;
+    duration = std::chrono::high_resolution_clock::now() - start;
+    printf("\nBasic mult algo = %lf:\n", duration.count());
+
+    if ((res1 == res2) && (res2 == res3) && (res3 == res4)) {
         printf("Cool\n");
     }
 //    s21::S21Matrix m1(5, 4);

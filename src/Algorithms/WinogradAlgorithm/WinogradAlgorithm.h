@@ -5,7 +5,6 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
-#include <unordered_set>
 #include "../AbstractAlgorithm.h"
 
 namespace s21 {
@@ -45,7 +44,7 @@ private:
 
     bool row_factors_ready_;
     bool column_factors_ready_;
-    bool stage_four_ready_;
+    bool stage_three_ready_;
 
     void StageOne();
     void StageTwo();

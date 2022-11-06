@@ -25,7 +25,7 @@ void WinogradAlgorithm::SetupParameters(S21Matrix *M1, S21Matrix *M2) {
 }
 
 S21Matrix WinogradAlgorithm::SolveWithoutParallelism(S21Matrix *M1, S21Matrix *M2) {
-    if (CheckIfMatricesCorrect(M1, M2)) {
+    if (!CheckIfMatricesCorrect(M1, M2)) {
         return S21Matrix();
     }
 
@@ -43,7 +43,7 @@ S21Matrix WinogradAlgorithm::SolveWithoutParallelism(S21Matrix *M1, S21Matrix *M
 }
 
 S21Matrix WinogradAlgorithm::SolveWithClassicParallelism(S21Matrix *M1, S21Matrix *M2) {
-    if (CheckIfMatricesCorrect(M1, M2)) {
+    if (!CheckIfMatricesCorrect(M1, M2)) {
         return S21Matrix();
     }
 
@@ -79,7 +79,7 @@ S21Matrix WinogradAlgorithm::SolveWithClassicParallelism(S21Matrix *M1, S21Matri
 }
 
 S21Matrix WinogradAlgorithm::SolveWithPipelineParallelism(S21Matrix *M1, S21Matrix *M2) {
-    if (CheckIfMatricesCorrect(M1, M2)) {
+    if (!CheckIfMatricesCorrect(M1, M2)) {
         return S21Matrix();
     }
 
@@ -87,7 +87,7 @@ S21Matrix WinogradAlgorithm::SolveWithPipelineParallelism(S21Matrix *M1, S21Matr
 
     column_factors_ready_ = false;
     row_factors_ready_ = false;
-    stage_four_ready_ = false;
+    stage_three_ready_ = false;
 
     std::thread t1(&WinogradAlgorithm::StageOne, this);
     std::thread t2(&WinogradAlgorithm::StageTwo, this);
@@ -107,18 +107,18 @@ S21Matrix WinogradAlgorithm::SolveWithPipelineParallelism(S21Matrix *M1, S21Matr
 
 void WinogradAlgorithm::CalculateRowFactors(int start_ind, int end_ind) {
     for (int i = start_ind; i < end_ind; i++) {
-        row_factors_[i] = M1_->operator(i, 0) * M1_->operator(i , 1);
+        row_factors_[i] = M1_->operator()(i, 0) * M1_->operator()(i , 1);
         for (int j = 1; j < len_; j++) {
-            row_factors_[i] += M1_->operator(i, 2 * j) * M1_->operator(i, 2 * j + 1);
+            row_factors_[i] += M1_->operator()(i, 2 * j) * M1_->operator()(i, 2 * j + 1);
         }
     }
 }
 
 void WinogradAlgorithm::CalculateColumnFactors(int start_ind, int end_ind) {
     for (int i = start_ind; i < end_ind; i++) {
-        column_factors_[i] = M2_->operator(0, i) * M2_->operator(1, i);
+        column_factors_[i] = M2_->operator()(0, i) * M2_->operator()(1, i);
         for (int j = 1; j < len_; j++) {
-            column_factors_[i] += M2_->operator(2 * j, i) * M2_->operator(2 * j + 1, i);
+            column_factors_[i] += M2_->operator()(2 * j, i) * M2_->operator()(2 * j + 1, i);
         }
     }
 }
@@ -130,11 +130,11 @@ void WinogradAlgorithm::CalculateResultMatrixValues(int start_ind, int end_ind) 
         for (int j = 0; j < M2_cols; j++) {
             res_(i, j) += -row_factors_[i] - column_factors_[j];
             for (int k = 0; k < len_; k++) {
-                res_(i, j) += (M1_->operator(i , 2*k) + M2_->operator(2*k + 1, j))
-                        * (M1_->operator(i , 2*k + 1) + M2_->operator(2*k, j));
+                res_(i, j) += (M1_->operator()(i , 2*k) + M2_->operator()(2*k + 1, j))
+                        * (M1_->operator()(i , 2*k + 1) + M2_->operator()(2*k, j));
             }
             if (M1_cols % 2 != 0) {
-                res_(i, j) += M1_(i, M1_cols - 1) * M2_(M1_cols - 1, j);
+                res_(i, j) += M1_->operator()(i, M1_cols - 1) * M2_->operator()(M1_cols - 1, j);
             }
         }
     }
@@ -163,41 +163,42 @@ void WinogradAlgorithm::StageTwo() {
 }
 
 void WinogradAlgorithm::StageThree() {
+    matrix_mtx_.lock();
+    int res_cols = res_.get_cols();
+    int M1_cols = M1_->get_cols();
+    if (M1_cols % 2 != 0) {
+        for (int i = 0; i < M1_->get_rows(); i++) {
+            for (int j = 0; j < res_cols; j++) {
+                double value = M1_->operator()(i, M1_cols - 1) * M2_->operator()(M1_cols - 1, j);
+                res_(i, j) += value;
+            }
+        }
+    }
+    stage_three_ready_ = true;
+    matrix_mtx_.unlock();
+    matrix_cv_.notify_all();
+}
+
+void WinogradAlgorithm::StageFour() {
     std::unique_lock<std::mutex> ul(row_factors_mtx_);
     std::unique_lock<std::mutex> ul2(column_factors_mtx_);
     std::unique_lock<std::mutex> ul3(matrix_mtx_);
 
     row_factors_cv_.wait(ul, [&] { return row_factors_ready_; });
     column_factors_cv_.wait(ul2, [&] { return column_factors_ready_; });
-    matrix_cv_.wait(ul3, [&] { return stage_four_ready_; });
+    matrix_cv_.wait(ul3, [&] { return stage_three_ready_; });
 
     int cols = res_.get_cols();
     for (int i = 0; i < M1_->get_rows(); i++) {
         for (int j = 0; j < cols; j++) {
             double value = -row_factors_[i] - column_factors_[j];
             for (int k = 0; k < len_; k++) {
-                value += (M1_->operator(i, 2 * k) + M2_->operator(2 * k + 1, j))
-                        * (M1_->operator(i, 2 * k + 1) + M2_->operator(2 * k, j));
+                value += (M1_->operator()(i, 2 * k) + M2_->operator()(2 * k + 1, j))
+                * (M1_->operator()(i, 2 * k + 1) + M2_->operator()(2 * k, j));
             }
             res_(i, j) += value;
         }
     }
-}
-
-void WinogradAlgorithm::StageFour() {
-    matrix_mtx_.lock();
-    int cols = res_.get_cols();
-    if (M1_->get_cols() % 2 != 0) {
-        for (int i = 0; i < M1_.get_rows(); i++) {
-            for (int j = 0; j < cols; j++) {
-                double value = M1_->operator(i, M1_->get_cols() - 1) * M2_->operator(M1_->get_cols() - 1, j);
-                res_(i, j) += value;
-            }
-        }
-    }
-    stage_four_ready_ = true;
-    matrix_mtx_.unlock();
-    matrix_cv_.notify_all();
 }
 
 }  // namespace s21
