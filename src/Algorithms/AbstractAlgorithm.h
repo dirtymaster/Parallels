@@ -12,7 +12,7 @@ public:
     virtual S21Matrix SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) = 0;
     virtual S21Matrix SolveUsingParallelism(std::vector<S21Matrix> matrices) = 0;
     std::pair<double, double> MeasureTime(
-        std::vector<S21Matrix> matrices,
+        std::vector<S21Matrix> matrices, std::pair<S21Matrix, S21Matrix>& results,
         int number_of_repetitions);  //  возвращает время решения без параллелизма и с
 };
 }  // namespace s21
