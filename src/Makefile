@@ -18,10 +18,15 @@ winograd_build:
 	$(FLAGS) $(WINOGRAD) -o wingograd.out
 	./wingograd.out
 
+qwerty:
+	$(FLAGS) Algorithms/WinogradALgorithm/*.cpp DataStructures/Matrix/Matrix.cpp -o qwerty.out
+	./qwerty.out
+
 winograd_start:
 	./wingograd.out
 
 winograd: winograd_build winograd_start
 
+
 clean:
-	rm -rf winograd.out
+	rm -rf *.out *.out.dSYM

@@ -84,7 +84,7 @@ void S21Matrix::mul_number(const double num) {
 }
 
 void S21Matrix::mul_matrix(const S21Matrix &other) {
-    if (_rows != other._cols || _cols != other._rows) {
+    if (_cols != other._rows) {
         throw "Mult error: Number of rows of the first matrix"
           "must be equal to number of columns of the second matrix";
     }
@@ -139,6 +139,10 @@ void S21Matrix::operator-=(const S21Matrix &other) { sub_matrix(other); }
 void S21Matrix::operator*=(const S21Matrix &other) { mul_matrix(other); }
 
 double &S21Matrix::operator()(const int i, const int j) {
+//    if (i >= _rows || i < 0 || j >= _cols || j < 0) {
+//        printf("Out of bounds i = %d, j = %d\n", i, j);
+//        exit(1);
+//    }
     return _matrix[i][j];
 }
 
