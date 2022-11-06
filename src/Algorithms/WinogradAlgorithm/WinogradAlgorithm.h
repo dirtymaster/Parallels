@@ -4,6 +4,7 @@
 
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 #include <unordered_set>
 #include "../AbstractAlgorithm.h"
 
@@ -29,8 +30,16 @@ private:
                                     int start_ind2, int end_ind2);
 
     // PIPELINE REALISATION //
+    std::mutex matrix_mtx_;
+    std::mutex row_factors_mtx_;
+    std::mutex column_factors_mtx_;
+    std::condition_variable row_factors_cv_;
+    std::condition_variable column_factors_cv_;
+    std::condition_variable matrix_cv_;
+    bool row_factors_ready_;
+    bool column_factors_ready_;
+    bool stage_four_ready_;
     void PipelineRealisation();
-    void AtomicWriteToRowFactor(double val);
     void StageOne();
     void StageTwo();
     void StageThree();

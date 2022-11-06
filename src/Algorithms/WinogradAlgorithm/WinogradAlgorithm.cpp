@@ -47,28 +47,30 @@ S21Matrix WinogradAlgorithm::SolveUsingParallelism(std::vector <S21Matrix> matri
     row_factors_ = new double[M1_.get_rows()];
     column_factors_ = new double[M2_.get_cols()];
     len_ = M1_.get_cols() / 2;
-    int nmb_of_threads = 6;
-    std::vector<std::thread> threads(nmb_of_threads);
+//    int nmb_of_threads = 6;
+//    std::vector<std::thread> threads(nmb_of_threads);
+//
+//    for (int i = 0; i < nmb_of_threads; i++) {
+//        threads[i] = std::thread(&WinogradAlgorithm::PrepareColumnAndRowFactors, this,
+//                                i * M1_.get_rows() / nmb_of_threads, (i + 1) * M1_.get_rows() / nmb_of_threads,
+//                                i * M1_.get_cols() / nmb_of_threads, (i + 1) * M2_.get_cols() / nmb_of_threads);
+//    }
+//
+//
+//    for (int i = 0; i < nmb_of_threads; i++) {
+//        threads[i].join();
+//    }
+//
+//    for (int i = 0; i < nmb_of_threads; i++) {
+//        threads[i] = std::thread(&WinogradAlgorithm::CalculateResultMatrixValues, this,
+//                                 i * M1_.get_rows() / nmb_of_threads, (i + 1) * M1_.get_rows() / nmb_of_threads);
+//    }
+//
+//    for (int i = 0; i < nmb_of_threads; i++) {
+//        threads[i].join();
+//    }
 
-    for (int i = 0; i < nmb_of_threads; i++) {
-        threads[i] = std::thread(&WinogradAlgorithm::PrepareColumnAndRowFactors, this,
-                                i * M1_.get_rows() / nmb_of_threads, (i + 1) * M1_.get_rows() / nmb_of_threads,
-                                i * M1_.get_cols() / nmb_of_threads, (i + 1) * M2_.get_cols() / nmb_of_threads);
-    }
-
-
-    for (int i = 0; i < nmb_of_threads; i++) {
-        threads[i].join();
-    }
-
-    for (int i = 0; i < nmb_of_threads; i++) {
-        threads[i] = std::thread(&WinogradAlgorithm::CalculateResultMatrixValues, this,
-                                 i * M1_.get_rows() / nmb_of_threads, (i + 1) * M1_.get_rows() / nmb_of_threads);
-    }
-
-    for (int i = 0; i < nmb_of_threads; i++) {
-        threads[i].join();
-    }
+    PipelineRealisation();
 
     delete[] row_factors_;
     delete[] column_factors_;
@@ -116,62 +118,70 @@ void WinogradAlgorithm::PrepareColumnAndRowFactors(int start_ind1, int end_ind1,
     CalculateColumnFactors(start_ind2, end_ind2);
 }
 
-//void WinogradAlgorithm::PipelineRealisation() {
-//    std::thread t1(&WinogradAlgorithm::StageOne, this);
-//    std::thread t2(&WinogradAlgorithm::StageTwo, this);
-//    std::thread t3(&WinogradAlgorithm::StageThree, this);
-//    std::thread t4(&WinogradAlgorithm::StageFour, this);
-//    t1.join();
-//    t2.join();
-//    t3.join();
-//    t4.join();
-//}
+void WinogradAlgorithm::PipelineRealisation() {
+    column_factors_ready_ = false;
+    row_factors_ready_ = false;
+    stage_four_ready_ = false;
+    std::thread t1(&WinogradAlgorithm::StageOne, this);
+    std::thread t2(&WinogradAlgorithm::StageTwo, this);
+    std::thread t3(&WinogradAlgorithm::StageThree, this);
+    std::thread t4(&WinogradAlgorithm::StageFour, this);
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+}
 
-//void WinogradAlgorithm::StageOne() {
-//    for (int i = 0; i < M1_.get_rows(); i++) {
-//        row_factors_[i] = M1_(i, 0) * M1_(i , 1);
-//        for (int j = 1; j < len_; j++) {
-//            row_factors_[i] += M1_(i, 2 * j) * M1_(i, 2 * j + 1);
-//        }
-//    }
-//}
-//
-//void WinogradAlgorithm::StageTwo() {
-//    for (int i = 0; i < M2_.get_cols(); i++) {
-//        column_factors_[i] = M2_(0, i) * M2_(1, i);
-//        for (int j = 1; j < len_; j++) {
-//            column_factors_[i] += M2_(2 * j, i) * M2_(2 * j + 1, i);
-//        }
-//    }
-//}
-//
-//void WinogradAlgorithm::StageThree() {
-//    int cols = res_.get_cols();
-//    for (int i = 0; i < M1_.get_rows(); i++) {
-//        for (int j = 0; j < cols; j++) {
-//            double value = -row_factors_[i] - column_factors_[j];
-//            for (int k = 0; k < len_; k++) {
-//                value += (M1_(i, 2 * k) + M2_(2 * k + 1, j)) * (M1_(i, 2 * k + 1) + M2_(2 * k, j));
-//            }
-//            matrix_mtx_.lock();
-//            res_(i, j) += value;
-//            matrix_mtx_.unlock();
-//        }
-//    }
-//}
-//
-//void WinogradAlgorithm::StageFour() {
-//    int cols = res_.get_cols();
-//    if (M1_.get_cols() % 2 != 0) {
-//        for (int i = 0; i < M1_.get_rows(); i++) {
-//            for (int j = 0; j < cols; j++) {
-//                double value = M1_(i, M1_.get_cols() - 1) * M2_(M1_.get_cols() - 1, j);
-//                matrix_mtx_.lock();
-//                res_(i, j) += value;
-//                matrix_mtx_.unlock();
-//            }
-//        }
-//    }
-//}
+void WinogradAlgorithm::StageOne() {
+    row_factors_mtx_.lock();
+    CalculateRowFactors(0, M1_.get_rows());
+    row_factors_ready_ = true;
+    row_factors_mtx_.unlock();
+    row_factors_cv_.notify_all();
+}
+
+void WinogradAlgorithm::StageTwo() {
+    column_factors_mtx_.lock();
+    CalculateColumnFactors(0, M2_.get_cols());
+    column_factors_ready_ = true;
+    column_factors_mtx_.unlock();
+    column_factors_cv_.notify_all();
+}
+
+void WinogradAlgorithm::StageThree() {
+    std::unique_lock<std::mutex> ul(row_factors_mtx_);
+    std::unique_lock<std::mutex> ul2(column_factors_mtx_);
+    std::unique_lock<std::mutex> ul3(matrix_mtx_);
+    row_factors_cv_.wait(ul, [&] { return row_factors_ready_; });
+    column_factors_cv_.wait(ul2, [&] { return column_factors_ready_; });
+    matrix_cv_.wait(ul3, [&] { return stage_four_ready_; });
+
+    int cols = res_.get_cols();
+    for (int i = 0; i < M1_.get_rows(); i++) {
+        for (int j = 0; j < cols; j++) {
+            double value = -row_factors_[i] - column_factors_[j];
+            for (int k = 0; k < len_; k++) {
+                value += (M1_(i, 2 * k) + M2_(2 * k + 1, j)) * (M1_(i, 2 * k + 1) + M2_(2 * k, j));
+            }
+            res_(i, j) += value;
+        }
+    }
+}
+
+void WinogradAlgorithm::StageFour() {
+    matrix_mtx_.lock();
+    int cols = res_.get_cols();
+    if (M1_.get_cols() % 2 != 0) {
+        for (int i = 0; i < M1_.get_rows(); i++) {
+            for (int j = 0; j < cols; j++) {
+                double value = M1_(i, M1_.get_cols() - 1) * M2_(M1_.get_cols() - 1, j);
+                res_(i, j) += value;
+            }
+        }
+    }
+    stage_four_ready_ = true;
+    matrix_mtx_.unlock();
+    matrix_cv_.notify_all();
+}
 
 }  // namespace s21
