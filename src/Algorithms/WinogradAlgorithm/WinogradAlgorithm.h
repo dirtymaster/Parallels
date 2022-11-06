@@ -3,6 +3,8 @@
 #define PARALLELS_WINOGRADALGORITHM_H
 
 #include <thread>
+#include <mutex>
+#include <unordered_set>
 #include "../AbstractAlgorithm.h"
 
 namespace s21 {
@@ -23,10 +25,16 @@ private:
     void CalculateRowFactors(int start_ind, int end_ind);
     void CalculateColumnFactors(int start_ind, int end_ind);
     void CalculateResultMatrixValues(int start_ind, int end_ind);
-    void HandleOddDimension(int start_ind, int end_ind);
     void PrepareColumnAndRowFactors(int start_ind1, int end_ind1,
                                     int start_ind2, int end_ind2);
-    void CalculateResult(int start_ind, int end_ind);
+
+    // PIPELINE REALISATION //
+    void PipelineRealisation();
+    void AtomicWriteToRowFactor(double val);
+    void StageOne();
+    void StageTwo();
+    void StageThree();
+    void StageFour();
 };
 
 }

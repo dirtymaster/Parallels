@@ -21,8 +21,11 @@ void Print_matrix(s21::S21Matrix m1) {
 }
 
 int main() {
-    s21::S21Matrix m1(1000, 1000);
-    s21::S21Matrix m2(1000, 1000);
+//    s21::S21Matrix m1(499, 499);
+//    s21::S21Matrix m2(499, 499);
+
+    s21::S21Matrix m1(1001, 1001);
+    s21::S21Matrix m2(1001, 1001);
 
     Fullfill_matrix(m1);
     Fullfill_matrix(m2);
