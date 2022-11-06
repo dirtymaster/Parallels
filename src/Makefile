@@ -1,10 +1,19 @@
-FLAGS = g++ -g -std=c++17 -Wall -Wextra -Werror
+FLAGS = g++ -g -std=c++17 #-Wall -Wextra -Werror
 
 COMMON = Algorithms/AbstractAlgorithm.cpp DataStructures/Matrix/Matrix.cpp
+ANT = Algorithms/AntColonyAlgorithm/AntAlgorithm.cpp ConsoleEngine/ConsoleForAnt/*.cpp
 GAUSS = ConsoleEngine/ConsoleForGauss/*.cpp Algorithms/Gauss/Gauss.cpp $(COMMON)
 WINOGRAD = ConsoleEngine/ConsoleForWinograd/*.cpp
 
 all: gauss_build winograd_build
+
+ant_build:
+	$(FLAGS) $(ANT) $(COMMON) -o ant.out
+
+ant_start:
+	./ant.out
+
+ant: ant_build ant_start
 
 gauss_build:
 	$(FLAGS) $(GAUSS) -o gauss.out
@@ -24,4 +33,4 @@ winograd_start:
 winograd: winograd_build winograd_start
 
 clean:
-	rm -rf winograd.out
+	rm -rf *.out.dSYM *.out

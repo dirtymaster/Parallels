@@ -1,9 +1,14 @@
 #ifndef A3_PARALLELS_0_MASTER_ABSTRACT_ALGORITHM_H
 #define A3_PARALLELS_0_MASTER_ABSTRACT_ALGORITHM_H
 
+#include <mutex>
+#include <thread>
 #include <vector>
 
 #include "../DataStructures/Matrix/Matrix.h"
+
+using std::vector;
+using std::thread;
 
 namespace s21 {
 class AbstractAlgorithm {
@@ -13,7 +18,7 @@ public:
     virtual S21Matrix SolveUsingParallelism(std::vector<S21Matrix> matrices) = 0;
     std::pair<double, double> MeasureTime(
         std::vector<S21Matrix> matrices, std::pair<S21Matrix, S21Matrix>& results,
-        int number_of_repetitions);  //  возвращает время решения без параллелизма и с
+        int number_of_repetitions);  //  возвращает время решения без параллелизма и с ним
 };
 }  // namespace s21
 

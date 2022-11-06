@@ -2,13 +2,8 @@
 #define A3_PARALLELS_0_MASTER_GAUSS_H
 
 #include <iostream>
-#include <mutex>
-#include <thread>
 
 #include "../AbstractAlgorithm.h"
-
-using std::vector;
-using std::thread;
 
 namespace s21 {
 class Gauss : public AbstractAlgorithm {
