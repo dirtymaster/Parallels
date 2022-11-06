@@ -14,7 +14,7 @@ std::pair<double, double> AbstractAlgorithm::MeasureTime(std::vector<S21Matrix> 
     times.first = duration.count();
 
     start_time = std::chrono::high_resolution_clock::now();
-    results.second = SolveUsingParallelism(matrices);  // записываем резальтат работы
+    results.second = SolveUsingParallelism(matrices);  // записываем результат работы
     for (int i = 1; i < number_of_repetitions; ++i) {
         SolveUsingParallelism(matrices);
     }

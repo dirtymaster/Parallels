@@ -38,21 +38,22 @@ S21Matrix Gauss::SolveUsingParallelism(std::vector<S21Matrix> matrices) {
         result.set_rows(1);
         result.set_columns(matrix.get_cols() - 1);
 
-        for (int i = 0; i < matrix.get_rows(); ++i) {
+        int rows = matrix.get_rows();
+        for (int i = 0; i < rows; ++i) {
             tmp = matrix(i, i);
             DivideEquation(matrix, tmp, i);
             SubtractElementsInMatrix(matrix, i);
         }
-        result(0, matrix.get_rows() - 1) = matrix(matrix.get_rows() - 1, matrix.get_rows());
+        result(0, rows - 1) = matrix(rows - 1, rows);
         EquateResultsToRightValues(matrix, result);
-        for (int i = matrix.get_rows() - 2; i >= 0; --i) {
+        for (int i = rows - 2; i >= 0; --i) {
             SubtractCalculatedVariables(matrix, result, i);
         }
     }
     return result;
 }
 
-void Gauss::DivideEquation(S21Matrix& matrix, double tmp, int i) {
+void Gauss:: DivideEquation(S21Matrix& matrix, double tmp, int i) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
         threads[thread_id] = std::thread(DivideEquationCycle, std::ref(matrix), tmp, i, thread_id);
