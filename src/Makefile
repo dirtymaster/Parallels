@@ -18,15 +18,14 @@ winograd_build:
 	$(FLAGS) $(WINOGRAD) -o wingograd.out
 	./wingograd.out
 
-qwerty:
-	$(FLAGS) Algorithms/WinogradALgorithm/*.cpp DataStructures/Matrix/Matrix.cpp -o qwerty.out
-	./qwerty.out
-
 winograd_start:
 	./wingograd.out
 
 winograd: winograd_build winograd_start
 
+test:
+	$(FLAGS) -lgtest $(COMMON) Algorithms/WinogradAlgorithm/WinogradAlgorithm.cpp Tests/Tests.cpp -o test.out
+	CK_FORKS=no leaks -atExit -- ./test.out
 
 clean:
 	rm -rf *.out *.out.dSYM
