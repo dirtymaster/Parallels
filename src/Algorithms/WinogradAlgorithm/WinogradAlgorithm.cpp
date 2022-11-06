@@ -29,6 +29,10 @@ S21Matrix WinogradAlgorithm::SolveWithoutParallelism(S21Matrix *M1, S21Matrix *M
         return S21Matrix();
     }
 
+    if (M1->get_cols() == 1) {
+        return (*M1) * (*M2);
+    }
+
     SetupParameters(M1, M2);
 
     PrepareColumnAndRowFactors(0, M1_->get_rows(),
@@ -42,20 +46,24 @@ S21Matrix WinogradAlgorithm::SolveWithoutParallelism(S21Matrix *M1, S21Matrix *M
     return res_;
 }
 
-S21Matrix WinogradAlgorithm::SolveWithClassicParallelism(S21Matrix *M1, S21Matrix *M2) {
+S21Matrix WinogradAlgorithm::SolveWithClassicParallelism(S21Matrix *M1, S21Matrix *M2, int threads) {
     if (!CheckIfMatricesCorrect(M1, M2)) {
         return S21Matrix();
     }
 
+    if (M1->get_cols() == 1) {
+        return (*M1) * (*M2);
+    }
+
     SetupParameters(M1, M2);
 
-    int nmb_of_threads = 6;
+    int nmb_of_threads = threads;
     std::vector<std::thread> threads(nmb_of_threads);
 
     for (int i = 0; i < nmb_of_threads; i++) {
         threads[i] = std::thread(&WinogradAlgorithm::PrepareColumnAndRowFactors, this,
                                  i * M1_->get_rows() / nmb_of_threads, (i + 1) * M1_->get_rows() / nmb_of_threads,
-                                 i * M1_->get_cols() / nmb_of_threads, (i + 1) * M2_->get_cols() / nmb_of_threads);
+                                 i * M2_->get_cols() / nmb_of_threads, (i + 1) * M2_->get_cols() / nmb_of_threads);
     }
 
 
@@ -81,6 +89,10 @@ S21Matrix WinogradAlgorithm::SolveWithClassicParallelism(S21Matrix *M1, S21Matri
 S21Matrix WinogradAlgorithm::SolveWithPipelineParallelism(S21Matrix *M1, S21Matrix *M2) {
     if (!CheckIfMatricesCorrect(M1, M2)) {
         return S21Matrix();
+    }
+
+    if (M1->get_cols() == 1) {
+        return (*M1) * (*M2);
     }
 
     SetupParameters(M1, M2);

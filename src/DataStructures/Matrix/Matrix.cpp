@@ -21,7 +21,7 @@ void S21Matrix::FillWithDigit(const double digit) {
 }
 
 void S21Matrix::allocate_matrix(int rows, int cols) {
-    if (rows < 0 || cols < 0) throw "Matrix creation error: Rows and columns must be greater than zero";
+    if (rows <= 0 || cols <= 0) throw "Matrix creation error: Rows and columns must be greater than zero";
     _rows = rows;
     _cols = cols;
     _matrix = new double *[_rows];
@@ -166,6 +166,25 @@ void S21Matrix::set_columns(int new_cols) {
 
 bool S21Matrix::is_empty() {
     return !get_rows() && !get_cols();
+}
+
+void S21Matrix::Print_matrix(s21::S21Matrix &m1) {
+    for (int i = 0; i < m1.get_rows(); i++) {
+        for (int j = 0; j < m1.get_cols(); j++) {
+            printf("%3.1lf ", m1(i, j));
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void S21Matrix::FillMatrixWithRandValues(s21::S21Matrix &m) {
+    double n = 1;
+    for (int i = 0; i < m.get_rows(); i++) {
+        for (int j = 0; j < m.get_cols(); j++) {
+            m(i, j) = n++;
+        }
+    }
 }
 
 }  // namespace s21

@@ -2,6 +2,7 @@
 #define A3_PARALLELS_0_MASTER_ABSTRACT_ALGORITHM_H
 
 #include <vector>
+#include <chrono>
 
 #include "../DataStructures/Matrix/Matrix.h"
 

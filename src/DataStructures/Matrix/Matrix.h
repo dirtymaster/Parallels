@@ -24,6 +24,9 @@ public:
     S21Matrix(S21Matrix &&other);
     ~S21Matrix();
 
+    static void Print_matrix(s21::S21Matrix &m1);
+    static void FillMatrixWithRandValues(s21::S21Matrix &m);
+
     int get_rows();
     int get_cols();
 

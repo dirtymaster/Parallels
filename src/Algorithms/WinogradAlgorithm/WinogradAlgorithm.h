@@ -14,7 +14,7 @@ public:
 
     S21Matrix SolveWithoutParallelism(S21Matrix *M1, S21Matrix *M2);
     S21Matrix SolveWithPipelineParallelism(S21Matrix *M1, S21Matrix *M2);
-    S21Matrix SolveWithClassicParallelism(S21Matrix *M1, S21Matrix *M2);
+    S21Matrix SolveWithClassicParallelism(S21Matrix *M1, S21Matrix *M2, int threads);
 
 private:
     double *row_factors_;
@@ -26,6 +26,7 @@ private:
 
     bool CheckIfMatricesCorrect(S21Matrix *M1, S21Matrix *M2);
     void SetupParameters(S21Matrix *M1, S21Matrix *M2);
+    S21Matrix HandleCornerCase(S21Matrix *M1, S21Matrix *M2);
 
     void CalculateRowFactors(int start_ind, int end_ind);
     void CalculateColumnFactors(int start_ind, int end_ind);
