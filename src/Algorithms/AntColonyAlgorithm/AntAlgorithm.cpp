@@ -28,26 +28,20 @@ namespace s21 {
             }
         }
         if (multithreading) {
-            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
-            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
-            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
-            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
+            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
+            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
+            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
+            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
             it1.join();
             it2.join();
             it3.join();
             it4.join();
         } else {
-            AntColonyAlgorithm(6000);
+            AntColonyAlgorithm(200);
         }
         for (int i = 0; i < shortest_path_.vertices.size(); ++i) {
             shortest_path_.vertices[i]++;
         }
-        std::cout << "Path\n";
-        std::cout << shortest_path_.distance << "\n";
-        for (auto iter : shortest_path_.vertices) {
-            std::cout << iter << ' ';
-        }
-        std::cout << "\n";
     }
 
     void AntAlgorithm::AntColonyAlgorithm(int end) {

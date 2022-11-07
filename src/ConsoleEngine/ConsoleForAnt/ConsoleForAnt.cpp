@@ -18,6 +18,7 @@ namespace s21 {
             }
         }
         ant_solver_.SetData(matrix, N);
+        std::cout << "End of initialization\n\n";
     }
 
     void ConsoleForAnt::RunAlgorithm() {
