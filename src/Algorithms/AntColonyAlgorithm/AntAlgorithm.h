@@ -36,7 +36,7 @@ namespace s21 {
         int N;
 
         void MainIteration(bool multithreading);
-        void BuildPath(int start, int end);
+        void BuildPath(int end);
         void ApplyDeltaToPheromones();
         double GetEventPossibility(int rows, int cols, std::set<int> &nodes);
         int GetNextNode(int cur_pos, std::set<int> &nodes, S21Matrix &event_);
@@ -44,7 +44,7 @@ namespace s21 {
         void IncreaseDelta(int path_of_cur, std::vector<int> &visited);
         TsmResult GetFullPath(std::vector<int> &visited);
         TsmResult GetShortestPath(int vertex1, int vertex2);
-        void AntColonyAlgorithm(int start, int end);
+        void AntColonyAlgorithm(int end);
     };
 }
 

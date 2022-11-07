@@ -28,29 +28,29 @@ namespace s21 {
             }
         }
         if (multithreading) {
-            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 0, 1500);
-            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500, 3000);
-            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 3000, 4500);
-            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 4500, 6000);
+            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
+            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
+            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
+            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500);
             it1.join();
             it2.join();
             it3.join();
             it4.join();
         } else {
-            AntColonyAlgorithm(0, 6000);
+            AntColonyAlgorithm(6000);
         }
         for (int i = 0; i < shortest_path_.vertices.size(); ++i) {
             shortest_path_.vertices[i]++;
         }
     }
 
-    void AntAlgorithm::AntColonyAlgorithm(int start, int end) {
+    void AntAlgorithm::AntColonyAlgorithm(int end) {
         for (size_t iteration = 0; iteration < N; iteration++) {
             // std::cout << std::this_thread::get_id() << "\n";
             if (iteration > 0) {
                 ApplyDeltaToPheromones();
             }
-            BuildPath(start, end);
+            BuildPath(end);
         }
     }
 
@@ -67,10 +67,10 @@ namespace s21 {
         }
     }
 
-    void AntAlgorithm::BuildPath(int start, int end) {
+    void AntAlgorithm::BuildPath(int end) {
         TsmResult min = TsmResult({}, -1.0);
         S21Matrix event(count_of_nodes_, count_of_nodes_);
-        for (int start_ind = start; start_ind < end; start_ind++) {
+        for (int start_ind = 0; start_ind < end; start_ind++) {
             std::vector<int> visited;
             std::set<int> available_nodes;
             int ants_path = 0;
