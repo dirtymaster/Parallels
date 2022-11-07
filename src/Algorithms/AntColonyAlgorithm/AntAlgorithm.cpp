@@ -3,7 +3,7 @@
 #include <functional>
 
 namespace s21 {
-    AntAlgorithm::AntAlgorithm(S21Matrix &matrix, int N) {
+    void AntAlgorithm::SetData(S21Matrix &matrix, int N) {
         matrix_ = std::move(matrix);
         count_of_nodes_ = matrix_.get_rows();
         this->N = N;
@@ -19,7 +19,7 @@ namespace s21 {
 
     void AntAlgorithm::MainIteration(bool multithreading) {
         shortest_path_ = TsmResult({}, -1.0);
-        pheromones_ = pheromones_delta_ = event_ = S21Matrix(count_of_nodes_, count_of_nodes_);
+        pheromones_ = pheromones_delta_ = S21Matrix(count_of_nodes_, count_of_nodes_);
         for (int i = 0; i < matrix_.get_rows(); ++i) {
             for (int j = 0; j < matrix_.get_cols(); ++j) {
                 if (matrix_(i, j) != 0.0) {
@@ -27,73 +27,94 @@ namespace s21 {
                 }
             }
         }
-        for (size_t iteration = 0; iteration < N; iteration++) {
-            if (iteration > 0) {
-                ApplyDeltaToPheromones();
-            }
-            TsmResult cur_path = AntColonyAlgorithm(multithreading);
-            if (shortest_path_.distance == -1.0 || cur_path.distance < shortest_path_.distance) {
-                shortest_path_ = cur_path;
-            }
+        if (multithreading) {
+            it1 = std::thread(&AntAlgorithm::kek, this, 0, 1500);
+            it2 = std::thread(&AntAlgorithm::kek, this, 1500, 3000);
+            it3 = std::thread(&AntAlgorithm::kek, this, 3000, 4500);
+            it4 = std::thread(&AntAlgorithm::kek, this, 4500, 6000);
+            it1.join();
+            it2.join();
+            it3.join();
+            it4.join();
+        } else {
+            kek(0, 6000);
         }
         for (int i = 0; i < shortest_path_.vertices.size(); ++i) {
             shortest_path_.vertices[i]++;
         }
     }
 
+    void AntAlgorithm::kek(int start, int end) {
+        for (size_t iteration = 0; iteration < N; iteration++) {
+            // std::cout << std::this_thread::get_id() << "\n";
+            if (iteration > 0) {
+                ApplyDeltaToPheromones();
+            }
+            BuildPath(start, end);
+        }
+    }
+
     void AntAlgorithm::ApplyDeltaToPheromones() {
         const double vape = 0.5;
-        for (int i = 0; i < matrix_.get_rows(); ++i) {
-            for (int j = 0; j < matrix_.get_cols(); ++j) {
+        for (int i = 0; i < matrix_.get_rows(); i++) {
+            // mt.lock();
+            for (int j = 0; j < matrix_.get_cols(); j++) {
                 if (matrix_(i, j) != 0.0) {
                     pheromones_(i, j) = vape * pheromones_(i, j) + pheromones_delta_(i, j);
                 }
             }
+            // mt.unlock();
         }
     }
 
-    TsmResult AntAlgorithm::AntColonyAlgorithm(bool multithreading) {
+    void AntAlgorithm::AntColonyAlgorithm(bool multithreading) {
         if (multithreading) {
-            std::vector<std::thread> thread_vec;
-            for (int i = 0; i < 4; i++) {
-
-            }
-            return shortest_path_;
+            it1 = std::thread(&AntAlgorithm::BuildPath, this, 0, 1500);
+            it2 = std::thread(&AntAlgorithm::BuildPath, this, 1500, 3000);
+            it3 = std::thread(&AntAlgorithm::BuildPath, this, 3000, 4500);
+            it4 = std::thread(&AntAlgorithm::BuildPath, this, 4500, 6000);
+            it1.join();
+            it2.join();
+            it3.join();
+            it4.join();
+        } else {
+            BuildPath(0, 6000);
         }
-        BuildPath(0, 200);
-        return shortest_path_;
     }
 
     void AntAlgorithm::BuildPath(int start, int end) {
         TsmResult min = TsmResult({}, -1.0);
+        S21Matrix event(count_of_nodes_, count_of_nodes_);
         for (int start_ind = start; start_ind < end; start_ind++) {
-            std::vector<int> ants_path(end - start), visited;
+            std::vector<int> visited;
             std::set<int> available_nodes;
-            for (int i = 0; i < count_of_nodes_; ++i) available_nodes.insert(i);
+            int ants_path = 0;
+            for (int i = 1; i < count_of_nodes_; ++i) available_nodes.insert(i);
             int current_pos = 0;
-            while (true) {
+            while (available_nodes.size() > 0) {
                 visited.push_back(current_pos);
-                available_nodes.erase(current_pos);
-                if (available_nodes.size() == 0) break;
-                event_.FillWithDigit(0.0);
+                event.FillWithDigit(0.0);
                 for (int j = 1; j < count_of_nodes_ && available_nodes.size() > 1; ++j) {
                     if (matrix_(current_pos, j) != 0.0) {
-                        event_(current_pos, j) = GetEventPossibility(current_pos, j, available_nodes);
+                        event(current_pos, j) = GetEventPossibility(current_pos, j, available_nodes);
                     }
                 }
                 int old_pos = current_pos;
-                current_pos = GetNextNode(current_pos, available_nodes);
-                ants_path[start] += matrix_(old_pos, current_pos);
+                current_pos = GetNextNode(current_pos, available_nodes, event);
+                available_nodes.erase(current_pos);
+                ants_path += matrix_(old_pos, current_pos);
             }
             TsmResult tmp = GetFullPath(visited);
             if (min.distance == -1.0 || tmp.distance < min.distance) {
                 min = tmp;
             }
-            IncreaseDelta(ants_path[start_ind], visited);
+            IncreaseDelta(ants_path, visited);
         }
+        mt.lock();
         if (shortest_path_.distance == -1 || min.distance < shortest_path_.distance) {
             shortest_path_ = min;
         }
+        mt.unlock();
     }
 
     double AntAlgorithm::GetEventPossibility(int rows, int cols, std::set<int> &nodes) {
@@ -107,7 +128,7 @@ namespace s21 {
         return (nominator / denominator);
     }
 
-    int AntAlgorithm::GetNextNode(int cur_pos, std::set<int> &nodes) {
+    int AntAlgorithm::GetNextNode(int cur_pos, std::set<int> &nodes, S21Matrix &event_) {
         if (nodes.size() == 1) {
             return *(nodes.begin());
         }
@@ -143,10 +164,12 @@ namespace s21 {
     void AntAlgorithm::IncreaseDelta(int path_of_cur, std::vector<int> &visited) {
         int last_ind = visited[0];
         const double Q = 10.0;
+        mt.lock();
         for (int i = 1; i < visited.size(); ++i) {
             pheromones_delta_(last_ind, visited[i]) += Q / path_of_cur;
             last_ind = visited[i];
         }
+        mt.unlock();
     }
 
     TsmResult AntAlgorithm::GetFullPath(std::vector<int> &visited) {

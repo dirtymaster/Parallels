@@ -8,7 +8,7 @@ namespace s21 {
         cout << "Enter the count of iterations:\n";
         cin >> N;
         int rows;
-        cout << "Enter the size of square matrix:";
+        cout << "Enter the edge of square matrix:\n";
         cin >> rows;
         S21Matrix matrix(rows, rows);
         cout << "Fill the matrix:\n";
@@ -17,19 +17,19 @@ namespace s21 {
                 cin >> matrix(i, j);
             }
         }
-        ant_solver_ = AntAlgorithm(matrix, N);
+        ant_solver_.SetData(matrix, N);
     }
 
     void ConsoleForAnt::RunAlgorithm() {
         auto start = std::chrono::high_resolution_clock::now();
         ant_solver_.SolveWithoutUsingParallelism();
         auto duration = std::chrono::high_resolution_clock::now() - start;
-        cout << "Default algorithm takes " << duration.count() << " microseconds\n";
+        cout << "\nDefault algorithm takes " << duration.count() << " microseconds\n\n";
 
-//        start = std::chrono::high_resolution_clock::now();
-//        ant_solver_.SolveUsingParallelism();
-//        duration = std::chrono::high_resolution_clock::now() - start;
-//        cout << "Algorithm with parallelism takes " << duration.count() << " microseconds\n";
+       start = std::chrono::high_resolution_clock::now();
+       ant_solver_.SolveUsingParallelism();
+       duration = std::chrono::high_resolution_clock::now() - start;
+       cout << "Algorithm with parallelism takes " << duration.count() << " microseconds\n";
     }
 
     void ConsoleForAnt::PrintResult() {
