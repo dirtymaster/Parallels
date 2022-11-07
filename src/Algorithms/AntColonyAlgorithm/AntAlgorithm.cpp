@@ -28,23 +28,23 @@ namespace s21 {
             }
         }
         if (multithreading) {
-            it1 = std::thread(&AntAlgorithm::kek, this, 0, 1500);
-            it2 = std::thread(&AntAlgorithm::kek, this, 1500, 3000);
-            it3 = std::thread(&AntAlgorithm::kek, this, 3000, 4500);
-            it4 = std::thread(&AntAlgorithm::kek, this, 4500, 6000);
+            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 0, 1500);
+            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 1500, 3000);
+            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 3000, 4500);
+            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 4500, 6000);
             it1.join();
             it2.join();
             it3.join();
             it4.join();
         } else {
-            kek(0, 6000);
+            AntColonyAlgorithm(0, 6000);
         }
         for (int i = 0; i < shortest_path_.vertices.size(); ++i) {
             shortest_path_.vertices[i]++;
         }
     }
 
-    void AntAlgorithm::kek(int start, int end) {
+    void AntAlgorithm::AntColonyAlgorithm(int start, int end) {
         for (size_t iteration = 0; iteration < N; iteration++) {
             // std::cout << std::this_thread::get_id() << "\n";
             if (iteration > 0) {
@@ -64,21 +64,6 @@ namespace s21 {
                 }
             }
             // mt.unlock();
-        }
-    }
-
-    void AntAlgorithm::AntColonyAlgorithm(bool multithreading) {
-        if (multithreading) {
-            it1 = std::thread(&AntAlgorithm::BuildPath, this, 0, 1500);
-            it2 = std::thread(&AntAlgorithm::BuildPath, this, 1500, 3000);
-            it3 = std::thread(&AntAlgorithm::BuildPath, this, 3000, 4500);
-            it4 = std::thread(&AntAlgorithm::BuildPath, this, 4500, 6000);
-            it1.join();
-            it2.join();
-            it3.join();
-            it4.join();
-        } else {
-            BuildPath(0, 6000);
         }
     }
 

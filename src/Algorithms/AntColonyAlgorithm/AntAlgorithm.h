@@ -38,14 +38,13 @@ namespace s21 {
         void MainIteration(bool multithreading);
         void BuildPath(int start, int end);
         void ApplyDeltaToPheromones();
-        void AntColonyAlgorithm(bool multithreading);
         double GetEventPossibility(int rows, int cols, std::set<int> &nodes);
         int GetNextNode(int cur_pos, std::set<int> &nodes, S21Matrix &event_);
         double LastPositiveEvent(std::vector<double> &event_vec, int j);
         void IncreaseDelta(int path_of_cur, std::vector<int> &visited);
         TsmResult GetFullPath(std::vector<int> &visited);
         TsmResult GetShortestPath(int vertex1, int vertex2);
-        void kek(int start, int end);
+        void AntColonyAlgorithm(int start, int end);
     };
 }
 
