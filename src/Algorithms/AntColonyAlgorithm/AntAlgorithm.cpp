@@ -42,6 +42,12 @@ namespace s21 {
         for (int i = 0; i < shortest_path_.vertices.size(); ++i) {
             shortest_path_.vertices[i]++;
         }
+        std::cout << "Path\n";
+        std::cout << shortest_path_.distance << "\n";
+        for (auto iter : shortest_path_.vertices) {
+            std::cout << iter << ' ';
+        }
+        std::cout << "\n";
     }
 
     void AntAlgorithm::AntColonyAlgorithm(int end) {
@@ -57,13 +63,13 @@ namespace s21 {
     void AntAlgorithm::ApplyDeltaToPheromones() {
         const double vape = 0.5;
         for (int i = 0; i < matrix_.get_rows(); i++) {
-            // mt.lock();
+            mt.lock();
             for (int j = 0; j < matrix_.get_cols(); j++) {
                 if (matrix_(i, j) != 0.0) {
                     pheromones_(i, j) = vape * pheromones_(i, j) + pheromones_delta_(i, j);
                 }
             }
-            // mt.unlock();
+            mt.unlock();
         }
     }
 
@@ -74,10 +80,12 @@ namespace s21 {
             std::vector<int> visited;
             std::set<int> available_nodes;
             int ants_path = 0;
-            for (int i = 1; i < count_of_nodes_; ++i) available_nodes.insert(i);
+            for (int i = 0; i < count_of_nodes_; ++i) available_nodes.insert(i);
             int current_pos = 0;
-            while (available_nodes.size() > 0) {
+            while (true) {
                 visited.push_back(current_pos);
+                available_nodes.erase(current_pos);
+                if (available_nodes.size() == 0) break;
                 event.FillWithDigit(0.0);
                 for (int j = 1; j < count_of_nodes_ && available_nodes.size() > 1; ++j) {
                     if (matrix_(current_pos, j) != 0.0) {
@@ -86,7 +94,6 @@ namespace s21 {
                 }
                 int old_pos = current_pos;
                 current_pos = GetNextNode(current_pos, available_nodes, event);
-                available_nodes.erase(current_pos);
                 ants_path += matrix_(old_pos, current_pos);
             }
             TsmResult tmp = GetFullPath(visited);
