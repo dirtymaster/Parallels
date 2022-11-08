@@ -8,106 +8,106 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/Users/rafael/Projects/Parallels/src/cmake-build-debug"/>
+				<Option working_dir="/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="a.out">
-				<Option output="/Users/rafael/Projects/Parallels/src/cmake-build-debug/a.out" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/rafael/Projects/Parallels/src/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 a.out"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="a.out/fast">
-				<Option output="/Users/rafael/Projects/Parallels/src/cmake-build-debug/a.out" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/rafael/Projects/Parallels/src/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 a.out/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="edit_cache">
-				<Option working_dir="/Users/rafael/Projects/Parallels/src/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/Users/rafael/Projects/Parallels/src/cmake-build-debug"/>
+				<Option working_dir="/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rafael/Projects/Parallels/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="a.out">
+				<Option output="/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/a.out" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 a.out"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="a.out/fast">
+				<Option output="/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/a.out" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 a.out/fast"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/Algorithms/AbstractAlgorithm.cpp">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/Algorithms/AbstractAlgorithm.cpp">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/Algorithms/AbstractAlgorithm.h">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/Algorithms/AbstractAlgorithm.h">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/Algorithms/Gauss/Gauss.cpp">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/Algorithms/Gauss/Gauss.cpp">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/Algorithms/Gauss/Gauss.h">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/Algorithms/Gauss/Gauss.h">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/ConsoleEngine/ConsoleForGauss/ConsoleForGauss.cpp">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/ConsoleEngine/ConsoleForGauss/ConsoleForGauss.cpp">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/ConsoleEngine/ConsoleForGauss/ConsoleForGauss.h">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/ConsoleEngine/ConsoleForGauss/ConsoleForGauss.h">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/ConsoleEngine/ConsoleForGauss/main.cpp">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/ConsoleEngine/ConsoleForGauss/main.cpp">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/DataStructures/Matrix/Matrix.cpp">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/DataStructures/Matrix/Matrix.cpp">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/DataStructures/Matrix/Matrix.h">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/DataStructures/Matrix/Matrix.h">
 			<Option target="a.out"/>
 		</Unit>
-		<Unit filename="/Users/rafael/Projects/Parallels/src/CMakeLists.txt">
+		<Unit filename="/Users/pilafber/Projects/parallelsGit/src/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
