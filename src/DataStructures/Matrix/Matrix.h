@@ -6,7 +6,7 @@
 
 namespace s21 {
 
-#define EPSILON 1e-15
+#define EPSILON 1e-10
 
 class S21Matrix {
 private:
