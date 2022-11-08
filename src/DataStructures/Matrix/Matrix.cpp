@@ -187,7 +187,7 @@ void S21Matrix::FillMatrixWithRandValues(s21::S21Matrix *m) {
     }
 }
 
-s21::S21Matrix* S21Matrix::ParseFileWithMatrix(std::fstream file) {
+s21::S21Matrix* S21Matrix::ParseFileWithMatrix(std::fstream &file) {
     int rows = 0, cols = 0;
     file >> rows >> cols;
     if (rows <= 0 || cols <= 0) {

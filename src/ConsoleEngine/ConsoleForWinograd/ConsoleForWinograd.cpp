@@ -86,7 +86,7 @@ bool ConsoleForWinograd::GetMatrixInput(S21Matrix **mat) {
     printf("string = [%s]\n", input.c_str());
     if (sscanf(input.data(), "%d%c%d", &rows_, &ch, &cols_) == 3 && ch == ' ') {
         if (rows_ <= 0 || cols_ <= 0) {
-            cout << "Invalid number of rows, cols, try again pls" << endl;
+            cout << "Invalid number of rows, cols, try again pls: ";
             return false;
         } else {
             *mat = new S21Matrix(rows_, cols_);
@@ -95,10 +95,14 @@ bool ConsoleForWinograd::GetMatrixInput(S21Matrix **mat) {
     } else {
         fstream file(input);
         if (!file) {
-            cout << "Invalid input, you need to enter file name or matrix dimensions" << endl;
+            cout << "Invalid input, you need to enter file name or matrix dimensions. Try again pls: ";
             return false;
         }
         *mat = S21Matrix::ParseFileWithMatrix(file);
+        if (*mat == nullptr) {
+            cout << "Error during parsing file, try again pls: ";
+            return false;
+        }
         S21Matrix::FillMatrixWithRandValues(*mat);
         file.close();
     }
