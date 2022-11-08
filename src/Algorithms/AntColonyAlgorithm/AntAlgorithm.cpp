@@ -1,6 +1,4 @@
 #include "AntAlgorithm.h"
-#include <iostream>
-#include <functional>
 
 namespace s21 {
     void AntAlgorithm::SetData(S21Matrix &matrix, int N) {
@@ -17,6 +15,10 @@ namespace s21 {
         MainIteration(true);
     }
 
+    TsmResult &AntAlgorithm::GetResult() {
+        return shortest_path_;
+    }
+
     void AntAlgorithm::MainIteration(bool multithreading) {
         shortest_path_ = TsmResult({}, -1.0);
         pheromones_ = pheromones_delta_ = S21Matrix(count_of_nodes_, count_of_nodes_);
@@ -28,16 +30,16 @@ namespace s21 {
             }
         }
         if (multithreading) {
-            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
-            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
-            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
-            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 50);
+            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
+            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
+            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
+            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
             it1.join();
             it2.join();
             it3.join();
             it4.join();
         } else {
-            AntColonyAlgorithm(200);
+            AntColonyAlgorithm(2000);
         }
         for (int i = 0; i < shortest_path_.vertices.size(); ++i) {
             shortest_path_.vertices[i]++;
@@ -46,7 +48,6 @@ namespace s21 {
 
     void AntAlgorithm::AntColonyAlgorithm(int end) {
         for (size_t iteration = 0; iteration < N; iteration++) {
-            // std::cout << std::this_thread::get_id() << "\n";
             if (iteration > 0) {
                 ApplyDeltaToPheromones();
             }

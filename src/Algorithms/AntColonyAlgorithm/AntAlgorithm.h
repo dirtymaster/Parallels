@@ -26,6 +26,7 @@ namespace s21 {
         void SetData(S21Matrix &matrix, int N);
         void SolveWithoutUsingParallelism();
         void SolveUsingParallelism();
+        TsmResult &GetResult();
 
     private:
         S21Matrix pheromones_, pheromones_delta_, matrix_;

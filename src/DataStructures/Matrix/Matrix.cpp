@@ -164,4 +164,13 @@ bool S21Matrix::is_empty() {
     return !get_rows() && !get_cols();
 }
 
+void S21Matrix::FillMatrixWithRandValues(s21::S21Matrix &m) {
+    double n = 1;
+    for (int i = 0; i < m.get_rows(); i++) {
+        for (int j = 0; j < m.get_cols(); j++) {
+            m(i, j) = n++;
+        }
+    }
+}
+
 }  // namespace s21

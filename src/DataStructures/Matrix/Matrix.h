@@ -38,6 +38,7 @@ public:
 
     S21Matrix transpose();
     void FillWithDigit(const double digit);
+    static void FillMatrixWithRandValues(S21Matrix &m);
 
     S21Matrix operator+(const S21Matrix &other);
     S21Matrix operator-(const S21Matrix &other);
