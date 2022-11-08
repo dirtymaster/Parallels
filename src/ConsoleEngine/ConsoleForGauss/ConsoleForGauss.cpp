@@ -2,9 +2,9 @@
 
 namespace s21 {
 ConsoleForGauss::ConsoleForGauss() {
-    abstract_algorithm_ = new Gauss;
+    abstract_algorithm_ = new GaussAlgorithm;
     filename_ = "";
-    start_message_ = "=== Solution of SLAE by Gauss method ===";
+    start_message_ = "=== Solution of SLAE by GaussAlgorithm method ===";
 }
 
 ConsoleForGauss::~ConsoleForGauss() { delete abstract_algorithm_; }

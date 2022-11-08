@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 
-#include "../Algorithms/Gauss/Gauss.h"
+#include "../Algorithms/Gauss/GaussAlgorithm.h"
 
 namespace s21 {
 class ConsoleEngine {
