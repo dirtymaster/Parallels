@@ -1,8 +1,31 @@
 #include "GaussAlgorithm.h"
 namespace s21 {
 int GaussAlgorithm::threads_in_level_;
-S21Matrix GaussAlgorithm::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
-    S21Matrix matrix(matrices[0]), result;
+
+std::pair<double, double> GaussAlgorithm::MeasureTime(S21Matrix matrix,
+                                                         std::pair<S21Matrix, S21Matrix>& results,
+                                                         int number_of_repetitions) {
+    std::pair<double, double> times;
+    auto start_time = std::chrono::high_resolution_clock::now();
+    results.first = SolveWithoutUsingParallelism(matrix);  // записываем результат работы
+    for (int i = 1; i < number_of_repetitions; ++i) {
+        SolveWithoutUsingParallelism(matrix);
+    }
+    std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    times.first = duration.count();
+
+    start_time = std::chrono::high_resolution_clock::now();
+    results.second = SolveUsingParallelism(matrix);  // записываем результат работы
+    for (int i = 1; i < number_of_repetitions; ++i) {
+        SolveUsingParallelism(matrix);
+    }
+    duration = std::chrono::high_resolution_clock::now() - start_time;
+    times.second = duration.count();
+    return times;
+}
+
+S21Matrix GaussAlgorithm::SolveWithoutUsingParallelism(S21Matrix matrix) {
+    S21Matrix result;
     if (matrix.get_rows() >= 2 && matrix.get_cols() == matrix.get_rows() + 1) {
         double tmp;
         result.set_rows(1);
@@ -30,18 +53,17 @@ S21Matrix GaussAlgorithm::SolveWithoutUsingParallelism(std::vector<S21Matrix> ma
     return result;
 }
 
-S21Matrix GaussAlgorithm::SolveUsingParallelism(std::vector<S21Matrix> matrices) {
-    S21Matrix matrix(matrices[0]), result;
+S21Matrix GaussAlgorithm::SolveUsingParallelism(S21Matrix matrix) {
+    S21Matrix result;
     if (matrix.get_rows() >= 2 && matrix.get_cols() == matrix.get_rows() + 1) {
-        threads_in_level_ = 2;
-        double tmp;
+        threads_in_level_ = std::thread::hardware_concurrency() - 1;
+        threads_in_level_ = matrix.get_cols() < threads_in_level_ ? matrix.get_cols() : threads_in_level_;
         result.set_rows(1);
         result.set_columns(matrix.get_rows());
 
         int rows = matrix.get_rows();
         for (int i = 0; i < rows; ++i) {
-            tmp = matrix(i, i);
-            DivideEquation(matrix, tmp, i);
+            DivideEquation(matrix, matrix(i, i), i);
             SubtractElementsInMatrix(matrix, i);
         }
         result(0, rows - 1) = matrix(rows - 1, rows);
@@ -70,23 +92,6 @@ void GaussAlgorithm::DivideEquationCycle(S21Matrix& matrix, double tmp, int i, i
     }
 }
 
-void GaussAlgorithm::SubtractElementsInRow(S21Matrix& matrix, double tmp, int i, int j) {
-    std::vector<std::thread> threads(threads_in_level_);
-    for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
-        threads[thread_id] = std::thread(SubtractElementsInRowCycle, std::ref(matrix), tmp, i, j, thread_id);
-    }
-    JoinThreads(threads);
-}
-
-void GaussAlgorithm::SubtractElementsInRowCycle(S21Matrix& matrix, double tmp, int i, int j, int thread_id) {
-    std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
-        InitializeStartAndEndIndices(matrix.get_rows(), i - 1, false);
-
-    for (int k = start_and_end_indices.first[thread_id]; k > start_and_end_indices.second[thread_id]; --k) {
-        matrix(j, k) -= tmp * matrix(i, k);
-    }
-}
-
 void GaussAlgorithm::SubtractElementsInMatrix(S21Matrix& matrix, int i) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
@@ -100,7 +105,10 @@ void GaussAlgorithm::SubtractElementsInMatrixCycle(S21Matrix& matrix, int i, int
         InitializeStartAndEndIndices(i + 1, matrix.get_rows(), true);
 
     for (int j = start_and_end_indices.first[thread_id]; j < start_and_end_indices.second[thread_id]; ++j) {
-        SubtractElementsInRow(matrix, matrix(j, i), i, j);
+        double tmp = matrix(j, i);
+        for (int k = matrix.get_rows(); k >= i; --k) {
+            matrix(j, k) -= tmp * matrix(i, k);
+        }
     }
 }
 
@@ -132,8 +140,8 @@ void GaussAlgorithm::SubtractCalculatedVariables(s21::S21Matrix& matrix, s21::S2
     JoinThreads(threads);
 }
 
-void GaussAlgorithm::SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i, int thread_id,
-                                             std::mutex& mtx) {
+void GaussAlgorithm::SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i,
+                                                      int thread_id, std::mutex& mtx) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(i + 1, matrix.get_rows(), true);
 

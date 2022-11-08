@@ -2,16 +2,17 @@
 #ifndef PARALLELS_WINOGRADALGORITHM_H
 #define PARALLELS_WINOGRADALGORITHM_H
 
-#include <thread>
-#include <mutex>
 #include <condition_variable>
-#include "../AbstractAlgorithm.h"
+#include <mutex>
+#include <thread>
+#include <vector>
+
+#include "../../DataStructures/Matrix/Matrix.h"
 
 namespace s21 {
 
 class WinogradAlgorithm {
 public:
-
     S21Matrix SolveWithoutParallelism(S21Matrix *M1, S21Matrix *M2);
     S21Matrix SolveWithPipelineParallelism(S21Matrix *M1, S21Matrix *M2);
     S21Matrix SolveWithClassicParallelism(S21Matrix *M1, S21Matrix *M2, int threads);
@@ -31,9 +32,7 @@ private:
     void CalculateRowFactors(int start_ind, int end_ind);
     void CalculateColumnFactors(int start_ind, int end_ind);
     void CalculateResultMatrixValues(int start_ind, int end_ind);
-    void PrepareColumnAndRowFactors(int start_ind1, int end_ind1,
-                                    int start_ind2, int end_ind2);
-
+    void PrepareColumnAndRowFactors(int start_ind1, int end_ind1, int start_ind2, int end_ind2);
 
     // PIPELINE REALISATION //
     std::mutex matrix_mtx_;
@@ -53,6 +52,6 @@ private:
     void StageFour();
 };
 
-}
+}  // namespace s21
 
-#endif //PARALLELS_WINOGRADALGORITHM_H
+#endif  // PARALLELS_WINOGRADALGORITHM_H
