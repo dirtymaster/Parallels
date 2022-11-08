@@ -53,8 +53,4 @@ dkms.conf
 .qmake-stash
 .clang-format
 *.out
-<<<<<<< HEAD
 cmake-build-debug
-=======
-cmake-build-debug
->>>>>>> 82c8f2ce5559ef8a3d15e3acba436869acdcd7af
