@@ -17,11 +17,9 @@ public:
 
     void start() {
         cout << start_message_ << endl;
-        while (true) {
-            RequestParamsFromUser();
-            RunAlgorithm();
-            PrintResult();
-        }
+        RequestParamsFromUser();
+        RunAlgorithm();
+        PrintResult();
     }
 
 protected:
@@ -29,8 +27,6 @@ protected:
     virtual void RequestParamsFromUser() = 0;
     virtual void RunAlgorithm() = 0;
     virtual void PrintResult() = 0;
-
-    AbstractAlgorithm* abstract_algorithm_;
 };
 
 }  // namespace s21

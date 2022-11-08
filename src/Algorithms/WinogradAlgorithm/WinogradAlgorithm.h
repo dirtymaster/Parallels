@@ -2,10 +2,11 @@
 #ifndef PARALLELS_WINOGRADALGORITHM_H
 #define PARALLELS_WINOGRADALGORITHM_H
 
+#include "../../DataStructures/Matrix/Matrix.h"
 #include <thread>
 #include <mutex>
 #include <condition_variable>
-#include "../AbstractAlgorithm.h"
+#include <vector>
 
 namespace s21 {
 
