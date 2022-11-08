@@ -3,7 +3,8 @@ FLAGS = g++ -g -std=c++17 -Wall -Wextra -Werror
 COMMON = DataStructures/Matrix/Matrix.cpp
 GAUSS = ConsoleEngine/ConsoleForGauss/ConsoleForGauss.cpp Algorithms/GaussAlgorithm/GaussAlgorithm.cpp
 ANT = Algorithms/AntColonyAlgorithm/AntAlgorithm.cpp
-WINOGRAD = ConsoleEngine/ConsoleForWinograd/*.cpp
+WINOGRAD_CONSOLE = ConsoleEngine/ConsoleForWinograd/*.cpp
+WINOGRAD_ALGO = Algorithms/WinogradAlgorithm/WinogradAlgorithm.cpp
 TEST = Tests/Tests.cpp
 
 all: ant_build gauss_build winograd_build
@@ -25,8 +26,7 @@ gauss_start:
 gauss: gauss_build gauss_start
 
 winograd_build:
-	$(FLAGS) $(WINOGRAD) -o wingograd.out
-	./wingograd.out
+	$(FLAGS) $(WINOGRAD_ALGO) $(WINOGRAD_CONSOLE) $(COMMON) -o wingograd.out
 
 winograd_start:
 	./wingograd.out
@@ -35,7 +35,7 @@ winograd: winograd_build winograd_start
 
 test:
 	$(FLAGS) $(COMMON) $(GAUSS) ConsoleEngine/ConsoleForGauss/ConsoleForTestingGauss/ConsoleForTestingGauss.cpp \
-	Algorithms/WinogradAlgorithm/WinogradAlgorithm.cpp \
+	$(WINOGRAD_ALGO) \
 	$(ANT) $(TEST) -o test.out -lgtest
 	./test.out
 

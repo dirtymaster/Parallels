@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <fstream>
 
 namespace s21 {
 
@@ -25,7 +26,8 @@ public:
     ~S21Matrix();
 
     static void Print_matrix(s21::S21Matrix &m1);
-    static void FillMatrixWithRandValues(s21::S21Matrix &m);
+    static void FillMatrixWithRandValues(s21::S21Matrix *m);
+    static S21Matrix* ParseFileWithMatrix(std::fstream &file);
 
     int get_rows();
     int get_cols();

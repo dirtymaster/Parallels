@@ -2,7 +2,20 @@
 #ifndef PARALLELS_CONSOLEFORWINOGRAD_H
 #define PARALLELS_CONSOLEFORWINOGRAD_H
 
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <chrono>
 #include "../AbstractConsoleEngine.h"
+#include "../../DataStructures/Matrix/Matrix.h"
+#include "../../Algorithms/WinogradAlgorithm/WinogradAlgorithm.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+using std::sscanf;
+using std::fstream;
+using std::string;
 
 namespace s21 {
 
@@ -12,11 +25,27 @@ public:
     ConsoleForWinograd();
 
 private:
+    S21Matrix *M1_;
+    S21Matrix *M2_;
+    int rows_;
+    int cols_;
+
+    WinogradAlgorithm winograd_algorithm_;
+    int nmb_of_repeats_;
+    int nmb_of_threads_;
+
+    std::chrono::duration<double> duration_without_parallelism_;
+    std::chrono::duration<double> duration_with_pipeline_parallelism_;
+    std::chrono::duration<double> duration_with_classic_parallelism_;
+
     void RequestParamsFromUser();
-    void RunAlgorithms();
+    void RunAlgorithm();
     void PrintResult();
 
-    // In private fields use whatever you want for algorithm
+    bool GetMatrixInput(S21Matrix **mat);
+    int RequestNmbFromUser(string message);
+    S21Matrix* ParseFileWithMatrix(fstream file);
+
 };
 
 }  // namespace s21
