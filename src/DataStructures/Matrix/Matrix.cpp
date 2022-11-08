@@ -179,13 +179,33 @@ void S21Matrix::Print_matrix(s21::S21Matrix &m1) {
     printf("\n");
 }
 
-void S21Matrix::FillMatrixWithRandValues(s21::S21Matrix &m) {
-    double n = 1;
-    for (int i = 0; i < m.get_rows(); i++) {
-        for (int j = 0; j < m.get_cols(); j++) {
-            m(i, j) = n++;
+void S21Matrix::FillMatrixWithRandValues(s21::S21Matrix *m) {
+    for (int i = 0; i < m->get_rows(); i++) {
+        for (int j = 0; j < m->get_cols(); j++) {
+            m->operator()(i, j) = rand() % 100;
         }
     }
+}
+
+s21::S21Matrix* S21Matrix::ParseFileWithMatrix(std::fstream file) {
+    int rows = 0, cols = 0;
+    file >> rows >> cols;
+    if (rows <= 0 || cols <= 0) {
+        return nullptr;
+    }
+    S21Matrix *mat = new S21Matrix(rows, cols);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            double value;
+            if (!(file >> value)) {
+                mat->destroy_matrix();
+                delete mat;
+                return nullptr;
+            }
+            mat->operator()(i, j) = value;
+        }
+    }
+    return mat;
 }
 
 }  // namespace s21

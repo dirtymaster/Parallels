@@ -42,9 +42,9 @@ private:
     void RunAlgorithm();
     void PrintResult();
 
-    bool GetMatrixInput(S21Matrix *mat);
-    void ParseFileWithMatrix();
+    bool GetMatrixInput(S21Matrix **mat);
     int RequestNmbFromUser(string message);
+    S21Matrix* ParseFileWithMatrix(fstream file);
 
 };
 
