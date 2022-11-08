@@ -8,42 +8,45 @@
 #include "../ConsoleEngine/ConsoleForGauss/ConsoleForTestingGauss/ConsoleForTestingGauss.h"
 #include "../DataStructures/Matrix/Matrix.h"
 
-TEST(AntAlgorithmTests, Test) {
+TEST(AntAlgorithmTests, Test1) {
     s21::S21Matrix matrix1(10, 10);
     s21::S21Matrix::FillMatrixWithRandValues(matrix1);
-    s21::AntAlgorithm ant_solver.SetData(matrix1, 10);
+    s21::AntAlgorithm ant_solver;
+    ant_solver.SetData(matrix1, 10);
 
     ant_solver.SolveWithoutUsingParallelism();
-    TsmResult default_algo = ant_solver.GetResult();
-    ant_solver.SolveWithUsingParallelism();
-    TsmResult threading_algo = ant_colver.GetResult();
+    s21::TsmResult default_algo = ant_solver.GetResult();
+    ant_solver.SolveUsingParallelism();
+    s21::TsmResult threading_algo = ant_solver.GetResult();
     EXPECT_TRUE(default_algo.distance == threading_algo.distance);
 }
 
-TEST(AntAlgorithmTests, Test) {
+TEST(AntAlgorithmTests, Test2) {
     s21::S21Matrix matrix1(10, 10);
     s21::S21Matrix::FillMatrixWithRandValues(matrix1);
-    s21::AntAlgorithm ant_solver.SetData(matrix1, 5);
-    ant_solver.SolveWithoutUsingParallelism()
-    TsmResult default_algo = ant_solver.GetResult();
+    s21::AntAlgorithm ant_solver;
+    ant_solver.SetData(matrix1, 5);
+    ant_solver.SolveWithoutUsingParallelism();
+    s21::TsmResult default_algo = ant_solver.GetResult();
 
     s21::S21Matrix matrix2(3, 3);
     s21::S21Matrix::FillMatrixWithRandValues(matrix2);
-    ant_solver_.SetData(matrix2, 5);
-    ant_colver.SolveWithUsingParallelism();
-    TsmResult threading_algo = ant_colver.GetResult();
+    ant_solver.SetData(matrix2, 5);
+    ant_solver.SolveUsingParallelism();
+    s21::TsmResult threading_algo = ant_solver.GetResult();
     EXPECT_FALSE(default_algo.distance == threading_algo.distance);
 }
 
-TEST(AntAlgorithmTests, Test) {
+TEST(AntAlgorithmTests, Test3) {
     s21::S21Matrix matrix1(1, 1);
     s21::S21Matrix::FillMatrixWithRandValues(matrix1);
-    s21::AntAlgorithm ant_solver.SetData(matrix1, 3);
+    s21::AntAlgorithm ant_solver;
+    ant_solver.SetData(matrix1, 3);
 
     ant_solver.SolveWithoutUsingParallelism();
-    TsmResult default_algo = ant_solver.GetResult();
-    ant_colver.SolveWithUsingParallelism();
-    TsmResult threading_algo = ant_colver.GetResult();
+    s21::TsmResult default_algo = ant_solver.GetResult();
+    ant_solver.SolveUsingParallelism();
+    s21::TsmResult threading_algo = ant_solver.GetResult();
     EXPECT_TRUE(default_algo.distance == threading_algo.distance);
 }
 
