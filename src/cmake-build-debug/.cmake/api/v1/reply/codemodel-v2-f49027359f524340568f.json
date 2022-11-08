@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "a.out::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-a.out-Debug-78b6eecdedda12c2fb7e.json",
+					"jsonFile" : "target-a.out-Debug-53f1c86dc03f0bf14671.json",
 					"name" : "a.out",
 					"projectIndex" : 0
 				}
@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/rafael/Projects/Parallels/src/cmake-build-debug",
-		"source" : "/Users/rafael/Projects/Parallels/src"
+		"build" : "/Users/pilafber/Projects/parallelsGit/src/cmake-build-debug",
+		"source" : "/Users/pilafber/Projects/parallelsGit/src"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 4
+		"minor" : 3
 	}
 }

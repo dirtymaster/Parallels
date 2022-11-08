@@ -3,6 +3,7 @@
 namespace s21 {
 ConsoleForGauss::ConsoleForGauss() {
     abstract_algorithm_ = new Gauss;
+    filename_ = "";
     start_message_ = "=== Solution of SLAE by Gauss method ===";
 }
 
@@ -20,29 +21,34 @@ void ConsoleForGauss::PrintResult() {
 }
 
 void ConsoleForGauss::RunAlgorithm() {
-    result_without_using_parallelism_ = abstract_algorithm_->SolveWithoutUsingParallelism({matrix_});
-    result_using_parallelism_ = abstract_algorithm_->SolveUsingParallelism({matrix_});
     times_ = abstract_algorithm_->MeasureTime({matrix_}, results_, number_of_repetitions_);
+    result_without_using_parallelism_ = results_.first;
+    result_using_parallelism_ = results_.second;
+    number_of_repetitions_ = -1;
+    filename_ = "";
 }
 
 void ConsoleForGauss::RequestParamsFromUser() {
-//    GenerateRandomMatrix();
     matrix_ = RequestMatrixFromUser();
     number_of_repetitions_ = RequestNumberOfRepetitions();
 }
 
 S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
-    //    std::string filename = RequestFilenameFromUser();
-    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
+    if (filename_ == "") {
+        RequestFilenameFromUser();
+    }
     S21Matrix result;
     std::fstream fs;
-    fs.open(filename, std::fstream::in);
-    if (!fs.is_open()) return result;
+    fs.open(filename_, std::fstream::in);
+    if (!fs.is_open()) {
+        std::cout << "Invalid file name." << std::endl;
+        filename_ = "";
+        return RequestMatrixFromUser();
+    }
     int rows, cols;
     fs >> rows;
     fs >> cols;
-    result.set_rows(rows);
-    result.set_columns(cols);
+    result = S21Matrix(rows, cols);
     if (rows <= 0 || cols <= 0) return result;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
@@ -54,27 +60,30 @@ S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
     return result;
 }
 
-string ConsoleForGauss::RequestFilenameFromUser() {
+void ConsoleForGauss::RequestFilenameFromUser() {
     std::cout << "Enter the text file name: ";
-    std::string filename;
-    std::cin >> filename;
-    return filename;
+    std::cin >> filename_;
 }
 
 int ConsoleForGauss::RequestNumberOfRepetitions() {
-    std::cout << "Enter the number of repetitions: ";
     int number;
-    std::cin >> number;
-    if (number < 1) {
-        std::cout << "The number must be greater than zero." << std::endl;
-        number = RequestNumberOfRepetitions();
+    if (number_of_repetitions_ == -1) {
+        std::cout << "Enter the number of repetitions: ";
+
+        std::cin >> number;
+        if (number < 1) {
+            std::cout << "The number must be greater than zero." << std::endl;
+            number = RequestNumberOfRepetitions();
+        }
+    } else {
+        return number_of_repetitions_;
     }
     return number;
 }
 
 void ConsoleForGauss::PrintMatrix(S21Matrix matrix) {
     if (matrix.get_rows() == 0 || matrix.get_cols() == 0) {
-        std::cout << "The matrix is empty" << std::endl;
+        std::cout << "The input matrix has incorrect parameters" << std::endl;
         return;
     }
     for (int i = 0; i < matrix.get_rows(); ++i) {
@@ -85,18 +94,17 @@ void ConsoleForGauss::PrintMatrix(S21Matrix matrix) {
     }
 }
 
- void ConsoleForGauss::GenerateRandomMatrix() {
-     std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
-     std::fstream fs(filename, std::fstream::out);
-     int rows = 9999;
-     int cols = 10000;
-     fs << rows << " " << cols << std::endl;
-     for (int i = 0; i < rows; ++i) {
-         for (int j = 0; j < cols; ++j) {
-             fs << rand() % 10 << " ";
-         }
-         fs << std::endl;
-     }
- }
-
+void ConsoleForGauss::GenerateRandomMatrix() {
+    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
+    std::fstream fs(filename, std::fstream::out);
+    int rows = 9999;
+    int cols = 10000;
+    fs << rows << " " << cols << std::endl;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            fs << rand() % 10 << " ";
+        }
+        fs << std::endl;
+    }
+}
 }  // namespace s21

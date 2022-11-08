@@ -21,7 +21,7 @@ void S21Matrix::FillWithDigit(const double digit) {
 }
 
 void S21Matrix::allocate_matrix(int rows, int cols) {
-    if (rows <= 0 || cols <= 0) throw "Matrix creation error: Rows and columns must be greater than zero";
+    // if (rows <= 0 || cols <= 0) throw "Matrix creation error: Rows and columns must be greater than zero";
     _rows = rows;
     _cols = cols;
     _matrix = new double *[_rows];
@@ -59,8 +59,9 @@ bool S21Matrix::eq_matrix(const S21Matrix &other) const {
     bool result = true;
     if (_rows != other._rows || _cols != other._cols) result = false;
     for (int i = 0; i < _rows && result; i++)
-        for (int j = 0; j < _cols && result; j++)
-            if (_matrix[i][j] != other._matrix[i][j]) result = false;
+        for (int j = 0; j < _cols && result; j++) {
+            if (fabs(_matrix[i][j] - other._matrix[i][j]) > EPSILON) result = false;
+        }
     return result;
 }
 
