@@ -7,8 +7,8 @@
 #include "../../Algorithms/GaussAlgorithm/GaussAlgorithm.h"
 #include "../AbstractConsoleEngine.h"
 
-using std::cout;
 using std::cin;
+using std::cout;
 using std::endl;
 
 namespace s21 {
@@ -17,10 +17,17 @@ public:
     ConsoleForGauss();
     ~ConsoleForGauss();
 
+protected:
+    void RequestParamsFromUser();
+    void RunAlgorithm();
+    std::string filename_ = "";
+    S21Matrix result_without_using_parallelism_;
+    int number_of_repetitions_ = -1;
+    S21Matrix result_using_parallelism_;
+
 private:
     void PrintResult();
-    void RequestFilenameFromUser();
-    S21Matrix RequestMatrixFromUser();
+    std::fstream RequestFilenameFromUser();
     int RequestNumberOfRepetitions();
     void PrintMatrix(S21Matrix matrix);
     void GenerateRandomMatrix();
@@ -29,14 +36,6 @@ private:
     S21Matrix matrix_;
     std::pair<double, double> times_;
     std::pair<S21Matrix, S21Matrix> results_;
-
-protected:
-    void RequestParamsFromUser();
-    void RunAlgorithm();
-    std::string filename_;
-    S21Matrix result_without_using_parallelism_;
-    int number_of_repetitions_ = -1;
-    S21Matrix result_using_parallelism_;
 };
 }  // namespace s21
 

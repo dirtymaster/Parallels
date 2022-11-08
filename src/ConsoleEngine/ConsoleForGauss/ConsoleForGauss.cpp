@@ -3,7 +3,6 @@
 namespace s21 {
 ConsoleForGauss::ConsoleForGauss() {
     gauss_algorithm_ = new GaussAlgorithm;
-    filename_ = "";
     start_message_ = "=== Solution of SLAE by GaussAlgorithm method ===";
 }
 
@@ -18,11 +17,10 @@ void ConsoleForGauss::PrintResult() {
         cout << "Seconds spent without using parallelism: " << times_.first << endl;
         cout << "Seconds spent using parallelism: " << times_.second << endl;
     }
-    cout << endl;
 }
 
 void ConsoleForGauss::RunAlgorithm() {
-    times_ = gauss_algorithm_->MeasureTime({matrix_}, results_, number_of_repetitions_);
+    times_ = gauss_algorithm_->MeasureTime(matrix_, results_, number_of_repetitions_);
     result_without_using_parallelism_ = results_.first;
     result_using_parallelism_ = results_.second;
     number_of_repetitions_ = -1;
@@ -30,41 +28,24 @@ void ConsoleForGauss::RunAlgorithm() {
 }
 
 void ConsoleForGauss::RequestParamsFromUser() {
-    matrix_ = RequestMatrixFromUser();
+    std::fstream fs = RequestFilenameFromUser();
+
+    matrix_ = *S21Matrix::ParseFileWithMatrix(fs);
     number_of_repetitions_ = RequestNumberOfRepetitions();
 }
 
-S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
-//    filename_ = "/Users/pilafber/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
+std::fstream ConsoleForGauss::RequestFilenameFromUser() {
     if (filename_ == "") {
-        RequestFilenameFromUser();
+        cout << "Enter the text file name: ";
+        cin >> filename_;
     }
-    S21Matrix result;
-    std::fstream fs;
-    fs.open(filename_, std::fstream::in);
-    if (!fs.is_open()) {
-        cout << "Invalid file name." << endl;
+    std::fstream fs(filename_, std::fstream::in);
+    while (!fs.is_open()) {
+        std::cout << "The file name is incorrect. ";
         filename_ = "";
-        return RequestMatrixFromUser();
+        fs = RequestFilenameFromUser();
     }
-    int rows, cols;
-    fs >> rows;
-    fs >> cols;
-    result = S21Matrix(rows, cols);
-    if (rows <= 0 || cols <= 0) return result;
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            double value;
-            if (!(fs >> value)) return S21Matrix();
-            result(i, j) = value;
-        }
-    }
-    return result;
-}
-
-void ConsoleForGauss::RequestFilenameFromUser() {
-    cout << "Enter the text file name: ";
-    cin >> filename_;
+    return fs;
 }
 
 int ConsoleForGauss::RequestNumberOfRepetitions() {

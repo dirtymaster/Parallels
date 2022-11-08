@@ -10,7 +10,7 @@
 
 TEST(AntAlgorithmTests, Test1) {
     s21::S21Matrix matrix1(10, 10);
-    s21::S21Matrix::FillMatrixWithRandValues(matrix1);
+    s21::S21Matrix::FillMatrixWithRandValues(&matrix1);
     s21::AntAlgorithm ant_solver;
     ant_solver.SetData(matrix1, 10);
 
@@ -23,14 +23,14 @@ TEST(AntAlgorithmTests, Test1) {
 
 TEST(AntAlgorithmTests, Test2) {
     s21::S21Matrix matrix1(10, 10);
-    s21::S21Matrix::FillMatrixWithRandValues(matrix1);
+    s21::S21Matrix::FillMatrixWithRandValues(&matrix1);
     s21::AntAlgorithm ant_solver;
     ant_solver.SetData(matrix1, 5);
     ant_solver.SolveWithoutUsingParallelism();
     s21::TsmResult default_algo = ant_solver.GetResult();
 
     s21::S21Matrix matrix2(3, 3);
-    s21::S21Matrix::FillMatrixWithRandValues(matrix2);
+    s21::S21Matrix::FillMatrixWithRandValues(&matrix2);
     ant_solver.SetData(matrix2, 5);
     ant_solver.SolveUsingParallelism();
     s21::TsmResult threading_algo = ant_solver.GetResult();
@@ -39,7 +39,7 @@ TEST(AntAlgorithmTests, Test2) {
 
 TEST(AntAlgorithmTests, Test3) {
     s21::S21Matrix matrix1(1, 1);
-    s21::S21Matrix::FillMatrixWithRandValues(matrix1);
+    s21::S21Matrix::FillMatrixWithRandValues(&matrix1);
     s21::AntAlgorithm ant_solver;
     ant_solver.SetData(matrix1, 3);
 
@@ -104,7 +104,7 @@ TEST(WinogradAlgoTests, DifferentCombination1) {
 TEST(WinogradAlgoTests, DifferentCombination2) {
     s21::S21Matrix m1(33, 1);
     s21::S21Matrix m2(1, 66);
-    s21::S21Matrix::FillMatrixWithRandValues(&);
+    s21::S21Matrix::FillMatrixWithRandValues(&m1);
     s21::S21Matrix::FillMatrixWithRandValues(&m2);
     s21::WinogradAlgorithm algorithm;
 
@@ -220,31 +220,31 @@ TEST(GaussAlgoTests, Rows3Cols4) {
 }
 
 TEST(GaussAlgoTests, Rows4Cols5) {
-    s21::S21Matrix expected(1, 4);
-    expected(0, 0) = -3;
-    expected(0, 1) = -1;
-    expected(0, 2) = 2;
-    expected(0, 3) = 7;
-    s21::ConsoleForTestingGauss console;
+   s21::S21Matrix expected(1, 4);
+   expected(0, 0) = -3;
+   expected(0, 1) = -1;
+   expected(0, 2) = 2;
+   expected(0, 3) = 7;
+   s21::ConsoleForTestingGauss console;
 
-    std::string filename = "TextFiles/GaussMethod2.txt";
-    console.SetFileName(filename);
-    console.SetNumberOfRepetitions(1);
-    console.RequestParamsFromUserForTest();
-    console.RunAlgorithmForTest();
-    EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == expected);
-    EXPECT_TRUE(console.GetResultUsingParallelism() == expected);
+   std::string filename = "TextFiles/GaussMethod2.txt";
+   console.SetFileName(filename);
+   console.SetNumberOfRepetitions(1);
+   console.RequestParamsFromUserForTest();
+   console.RunAlgorithmForTest();
+   EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == expected);
+   EXPECT_TRUE(console.GetResultUsingParallelism() == expected);
 }
 
 TEST(GaussAlgoTests, Rows99Cols100) {
-    s21::ConsoleForTestingGauss console;
+   s21::ConsoleForTestingGauss console;
 
-    std::string filename = "TextFiles/GaussMethod3.txt";
-    console.SetFileName(filename);
-    console.SetNumberOfRepetitions(1);
-    console.RequestParamsFromUserForTest();
-    console.RunAlgorithmForTest();
-    EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == console.GetResultUsingParallelism());
+   std::string filename = "TextFiles/GaussMethod3.txt";
+   console.SetFileName(filename);
+   console.SetNumberOfRepetitions(1);
+   console.RequestParamsFromUserForTest();
+   console.RunAlgorithmForTest();
+   EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == console.GetResultUsingParallelism());
 }
 
 int main(int argc, char *argv[]) {
