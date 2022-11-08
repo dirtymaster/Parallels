@@ -15,7 +15,7 @@ namespace s21 {
         cout << "Fill the matrix:\n";
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < rows; j++) {
-                cin >> matrix(i, j);
+                std::cin >> matrix(i, j);
             }
         }
         ant_solver_.SetData(matrix, N);
