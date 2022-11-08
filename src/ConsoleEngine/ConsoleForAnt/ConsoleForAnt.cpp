@@ -11,13 +11,13 @@ namespace s21 {
         std::cout << "Enter the edge of square matrix:\n";
         std::cin >> rows;
         S21Matrix matrix(rows, rows);
-        S21Matrix::FillMatrixWithRandValues(matrix);
-        // cout << "Fill the matrix:\n";
-        // for (int i = 0; i < rows; i++) {
-        //     for (int j = 0; j < rows; j++) {
-        //         cin >> matrix(i, j);
-        //     }
-        // }
+        // S21Matrix::FillMatrixWithRandValues(matrix);
+        cout << "Fill the matrix:\n";
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < rows; j++) {
+                cin >> matrix(i, j);
+            }
+        }
         ant_solver_.SetData(matrix, N);
         std::cout << "End of initialization\n\n";
     }

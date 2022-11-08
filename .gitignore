@@ -52,5 +52,5 @@ dkms.conf
 .DS_STORE
 .qmake-stash
 .clang-format
-*.out
+*.out*
 cmake-build-debug

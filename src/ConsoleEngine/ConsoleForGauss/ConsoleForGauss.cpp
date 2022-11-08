@@ -2,26 +2,27 @@
 
 namespace s21 {
 ConsoleForGauss::ConsoleForGauss() {
-    abstract_algorithm_ = new GaussAlgorithm;
+    gauss_algorithm_ = new GaussAlgorithm;
     filename_ = "";
     start_message_ = "=== Solution of SLAE by GaussAlgorithm method ===";
 }
 
-ConsoleForGauss::~ConsoleForGauss() { delete abstract_algorithm_; }
+ConsoleForGauss::~ConsoleForGauss() { delete gauss_algorithm_; }
 
 void ConsoleForGauss::PrintResult() {
-    std::cout << "Output without using parallelism:" << std::endl;
+    cout << "Output without using parallelism:" << endl;
     PrintMatrix(results_.first);
-    std::cout << "Output using parallelism:" << std::endl;
+    cout << "Output using parallelism:" << endl;
     PrintMatrix(results_.second);
     if (!result_without_using_parallelism_.is_empty() && !result_using_parallelism_.is_empty()) {
-        std::cout << "Seconds spent without using parallelism: " << times_.first << std::endl;
-        std::cout << "Seconds spent using parallelism: " << times_.second << std::endl;
+        cout << "Seconds spent without using parallelism: " << times_.first << endl;
+        cout << "Seconds spent using parallelism: " << times_.second << endl;
     }
+    cout << endl;
 }
 
 void ConsoleForGauss::RunAlgorithm() {
-    times_ = abstract_algorithm_->MeasureTime({matrix_}, results_, number_of_repetitions_);
+    times_ = gauss_algorithm_->MeasureTime({matrix_}, results_, number_of_repetitions_);
     result_without_using_parallelism_ = results_.first;
     result_using_parallelism_ = results_.second;
     number_of_repetitions_ = -1;
@@ -34,6 +35,7 @@ void ConsoleForGauss::RequestParamsFromUser() {
 }
 
 S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
+//    filename_ = "/Users/pilafber/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
     if (filename_ == "") {
         RequestFilenameFromUser();
     }
@@ -41,7 +43,7 @@ S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
     std::fstream fs;
     fs.open(filename_, std::fstream::in);
     if (!fs.is_open()) {
-        std::cout << "Invalid file name." << std::endl;
+        cout << "Invalid file name." << endl;
         filename_ = "";
         return RequestMatrixFromUser();
     }
@@ -61,18 +63,18 @@ S21Matrix ConsoleForGauss::RequestMatrixFromUser() {
 }
 
 void ConsoleForGauss::RequestFilenameFromUser() {
-    std::cout << "Enter the text file name: ";
-    std::cin >> filename_;
+    cout << "Enter the text file name: ";
+    cin >> filename_;
 }
 
 int ConsoleForGauss::RequestNumberOfRepetitions() {
     int number;
     if (number_of_repetitions_ == -1) {
-        std::cout << "Enter the number of repetitions: ";
+        cout << "Enter the number of repetitions: ";
 
-        std::cin >> number;
+        cin >> number;
         if (number < 1) {
-            std::cout << "The number must be greater than zero." << std::endl;
+            cout << "The number must be greater than zero." << endl;
             number = RequestNumberOfRepetitions();
         }
     } else {
@@ -83,14 +85,14 @@ int ConsoleForGauss::RequestNumberOfRepetitions() {
 
 void ConsoleForGauss::PrintMatrix(S21Matrix matrix) {
     if (matrix.get_rows() == 0 || matrix.get_cols() == 0) {
-        std::cout << "The input matrix has incorrect parameters" << std::endl;
+        cout << "The input matrix has incorrect parameters" << endl;
         return;
     }
     for (int i = 0; i < matrix.get_rows(); ++i) {
         for (int j = 0; j < matrix.get_cols(); ++j) {
-            std::cout << matrix(i, j) << " ";
+            cout << matrix(i, j) << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 }
 
@@ -99,12 +101,12 @@ void ConsoleForGauss::GenerateRandomMatrix() {
     std::fstream fs(filename, std::fstream::out);
     int rows = 9999;
     int cols = 10000;
-    fs << rows << " " << cols << std::endl;
+    fs << rows << " " << cols << endl;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             fs << rand() % 10 << " ";
         }
-        fs << std::endl;
+        fs << endl;
     }
 }
 }  // namespace s21
