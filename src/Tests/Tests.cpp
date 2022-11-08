@@ -6,6 +6,7 @@
 #include "../Algorithms/WinogradAlgorithm/WinogradAlgorithm.h"
 #include "../ConsoleEngine/ConsoleForGauss/ConsoleForTestingGauss/ConsoleForTestingGauss.h"
 #include "../DataStructures/Matrix/Matrix.h"
+#include "../Algorithms/AntAlgorithm.h"
 
 TEST(WinogradAlgoTests, EvenMatrices) {
     s21::S21Matrix m1(100, 100);
@@ -207,26 +208,40 @@ TEST(GaussAlgoTests, Rows99Cols100) {
     EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == console.GetResultUsingParallelism());
 }
 
+TEST(AntAlgorithmTests, Test) {
+    s21::S21Matrix matrix1(10, 10);
+    s21::S21Matrix::FillMatrixWithRandValues(matrix1);
+    s21::AntAlgorithm ant_solver.SetData(matrix1, 10);
+
+    TsmResult default_algo = ant_solver.SolveWithoutUsingParallelism();
+    TsmResult threading_algo = ant_colver.SolveWithUsingParallelism();
+    EXPECT_TRUE(default_algo.distance == threading_algo.distance);
+}
+
+TEST(AntAlgorithmTests, Test) {
+    s21::S21Matrix matrix1(10, 10);
+    s21::S21Matrix::FillMatrixWithRandValues(matrix1);
+    s21::AntAlgorithm ant_solver.SetData(matrix1, 5);
+    TsmResult default_algo = ant_solver.SolveWithoutUsingParallelism();
+
+    s21::S21Matrix matrix2(3, 3);
+    s21::S21Matrix::FillMatrixWithRandValues(matrix2);
+    ant_solver_.SetData(matrix2, 5);
+    TsmResult threading_algo = ant_colver.SolveWithUsingParallelism();
+    EXPECT_FALSE(default_algo.distance == threading_algo.distance);
+}
+
+TEST(AntAlgorithmTests, Test) {
+    s21::S21Matrix matrix1(1, 1);
+    s21::S21Matrix::FillMatrixWithRandValues(matrix1);
+    s21::AntAlgorithm ant_solver.SetData(matrix1, 3);
+
+    TsmResult default_algo = ant_solver.SolveWithoutUsingParallelism();
+    TsmResult threading_algo = ant_colver.SolveWithUsingParallelism();
+    EXPECT_TRUE(default_algo.distance == threading_algo.distance);
+}
+
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-
-    //    if (argc && argv) {;}
-    //    s21::S21Matrix m1(6, 11);
-    //    s21::S21Matrix m2(11, 6);
-    //    s21::S21Matrix::FillMatrixWithRandValues(m1);
-    //    s21::S21Matrix::FillMatrixWithRandValues(m2);
-    //    s21::WinogradAlgorithm algorithm;
-    //
-    //    s21::S21Matrix expected = m1 * m2;
-    //    s21::S21Matrix res1 = algorithm.SolveWithoutParallelism(&m1, &m2);
-    //    s21::S21Matrix res2 = algorithm.SolveWithPipelineParallelism(&m1, &m2);
-    //    s21::S21Matrix res3 = algorithm.SolveWithClassicParallelism(&m1, &m2);
-    //
-    //    s21::S21Matrix::Print_matrix(res1);
-    //    s21::S21Matrix::Print_matrix(res2);
-    //    s21::S21Matrix::Print_matrix(res3);
-    //    s21::S21Matrix::Print_matrix(expected);
-
-    return 0;
 }
