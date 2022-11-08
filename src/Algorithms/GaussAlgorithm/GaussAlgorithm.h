@@ -7,11 +7,11 @@
 
 #include "../AbstractAlgorithm.h"
 
-using std::vector;
 using std::thread;
+using std::vector;
 
 namespace s21 {
-class Gauss : public AbstractAlgorithm {
+class GaussAlgorithm : public AbstractAlgorithm {
 public:
     S21Matrix SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) override;
     S21Matrix SolveUsingParallelism(std::vector<S21Matrix> matrices) override;
@@ -27,7 +27,8 @@ private:
     static void EquateResultsToRightValues(S21Matrix& matrix, S21Matrix& result);
     static void EquateResultsToRightValuesCycle(S21Matrix& matrix, S21Matrix& result, int thread_id);
     static void SubtractCalculatedVariables(S21Matrix& matrix, S21Matrix& result, int i);
-    static void SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i, int thread_id, std::mutex& mtx);
+    static void SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i, int thread_id,
+                                                 std::mutex& mtx);
     static std::pair<std::vector<int>, std::vector<int>> InitializeStartAndEndIndices(
         int start_index, int end_index, bool start_is_less_than_end);
     static void JoinThreads(std::vector<std::thread>& threads);

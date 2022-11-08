@@ -2,8 +2,9 @@
 #define PARALLELS_CONSOLEFORGAUSS_H
 
 #include <fstream>
+#include <string>
 
-#include "../../Algorithms/Gauss/Gauss.h"
+#include "../../Algorithms/GaussAlgorithm/GaussAlgorithm.h"
 #include "../AbstractConsoleEngine.h"
 
 namespace s21 {
@@ -13,12 +14,8 @@ public:
     ~ConsoleForGauss();
 
 private:
-    void RequestParamsFromUser();
-
-    void RunAlgorithm();
-
     void PrintResult();
-    std::string RequestFilenameFromUser();
+    void RequestFilenameFromUser();
     S21Matrix RequestMatrixFromUser();
     int RequestNumberOfRepetitions();
     void PrintMatrix(S21Matrix matrix);
@@ -26,11 +23,16 @@ private:
 
     AbstractAlgorithm *gauss_algorithm_;
     S21Matrix matrix_;
-    int number_of_repetitions_;
-    S21Matrix result_without_using_parallelism_;
-    S21Matrix result_using_parallelism_;
     std::pair<double, double> times_;
     std::pair<S21Matrix, S21Matrix> results_;
+
+protected:
+    void RequestParamsFromUser();
+    void RunAlgorithm();
+    std::string filename_;
+    S21Matrix result_without_using_parallelism_;
+    int number_of_repetitions_ = -1;
+    S21Matrix result_using_parallelism_;
 };
 }  // namespace s21
 

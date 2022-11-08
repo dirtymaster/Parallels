@@ -1,5 +1,4 @@
 #include "AbstractAlgorithm.h"
-
 namespace s21 {
 std::pair<double, double> AbstractAlgorithm::MeasureTime(std::vector<S21Matrix> matrices,
                                                          std::pair<S21Matrix, S21Matrix>& results,
