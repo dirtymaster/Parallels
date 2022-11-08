@@ -17,11 +17,9 @@ public:
 
     void start() {
         cout << start_message_ << endl;
-        while (true) {
-            RequestParamsFromUser();
-            RunAlgorithm();
-            PrintResult();
-        }
+        RequestParamsFromUser();
+        RunAlgorithm();
+        PrintResult();
     }
 
 protected:
