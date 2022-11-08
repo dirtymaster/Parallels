@@ -4,7 +4,7 @@ namespace s21 {
 std::string ConsoleEngine::menu_options_ =
     ("Menu options:\n"
      "\t 1. Solve salesman problem using and algorithm.\n"
-     "\t 2. Solve SLAE using the Gauss method.\n"
+     "\t 2. Solve SLAE using the GaussAlgorithm method.\n"
      "\t 3. Multiply matrices using the Winograd algorithm\n"
      "\t 0. Close the application.\n");
 

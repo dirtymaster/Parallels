@@ -11,7 +11,7 @@ using std::thread;
 using std::vector;
 
 namespace s21 {
-class Gauss : public AbstractAlgorithm {
+class GaussAlgorithm : public AbstractAlgorithm {
 public:
     S21Matrix SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) override;
     S21Matrix SolveUsingParallelism(std::vector<S21Matrix> matrices) override;

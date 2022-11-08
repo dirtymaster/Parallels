@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../Algorithms/Gauss/Gauss.h"
+#include "../Algorithms/GaussAlgorithm/GaussAlgorithm.h"
 #include "../Algorithms/WinogradAlgorithm/WinogradAlgorithm.h"
 #include "../ConsoleEngine/ConsoleForGauss/ConsoleForTestingGauss/ConsoleForTestingGauss.h"
 #include "../DataStructures/Matrix/Matrix.h"
@@ -165,7 +165,7 @@ TEST(GaussAlgoTests, Rows3Cols4) {
     expected(0, 0) = 1;
     expected(0, 1) = 2;
     expected(0, 2) = 3;
-    s21::Gauss algorithm;
+    s21::GaussAlgorithm algorithm;
     s21::ConsoleForTestingGauss console;
 
     std::string filename = "TextFiles/GaussMethod1.txt";
@@ -183,7 +183,7 @@ TEST(GaussAlgoTests, Rows4Cols5) {
     expected(0, 1) = -1;
     expected(0, 2) = 2;
     expected(0, 3) = 7;
-    s21::Gauss algorithm;
+    s21::GaussAlgorithm algorithm;
     s21::ConsoleForTestingGauss console;
 
     std::string filename = "TextFiles/GaussMethod2.txt";
@@ -196,7 +196,7 @@ TEST(GaussAlgoTests, Rows4Cols5) {
 }
 
 TEST(GaussAlgoTests, Rows99Cols100) {
-    s21::Gauss algorithm;
+    s21::GaussAlgorithm algorithm;
     s21::ConsoleForTestingGauss console;
 
     std::string filename = "TextFiles/GaussMethod3.txt";

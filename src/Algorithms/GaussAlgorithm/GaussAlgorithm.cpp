@@ -1,7 +1,7 @@
-#include "Gauss.h"
+#include "GaussAlgorithm.h"
 namespace s21 {
-int Gauss::threads_in_level_;
-S21Matrix Gauss::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
+int GaussAlgorithm::threads_in_level_;
+S21Matrix GaussAlgorithm::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
     S21Matrix matrix(matrices[0]), result;
     if (matrix.get_rows() >= 2 && matrix.get_cols() == matrix.get_rows() + 1) {
         double tmp;
@@ -30,7 +30,7 @@ S21Matrix Gauss::SolveWithoutUsingParallelism(std::vector<S21Matrix> matrices) {
     return result;
 }
 
-S21Matrix Gauss::SolveUsingParallelism(std::vector<S21Matrix> matrices) {
+S21Matrix GaussAlgorithm::SolveUsingParallelism(std::vector<S21Matrix> matrices) {
     S21Matrix matrix(matrices[0]), result;
     if (matrix.get_rows() >= 2 && matrix.get_cols() == matrix.get_rows() + 1) {
         threads_in_level_ = 2;
@@ -53,7 +53,7 @@ S21Matrix Gauss::SolveUsingParallelism(std::vector<S21Matrix> matrices) {
     return result;
 }
 
-void Gauss::DivideEquation(S21Matrix& matrix, double tmp, int i) {
+void GaussAlgorithm::DivideEquation(S21Matrix& matrix, double tmp, int i) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
         threads[thread_id] = std::thread(DivideEquationCycle, std::ref(matrix), tmp, i, thread_id);
@@ -61,7 +61,7 @@ void Gauss::DivideEquation(S21Matrix& matrix, double tmp, int i) {
     JoinThreads(threads);
 }
 
-void Gauss::DivideEquationCycle(S21Matrix& matrix, double tmp, int i, int thread_id) {
+void GaussAlgorithm::DivideEquationCycle(S21Matrix& matrix, double tmp, int i, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(matrix.get_rows(), i - 1, false);
 
@@ -70,7 +70,7 @@ void Gauss::DivideEquationCycle(S21Matrix& matrix, double tmp, int i, int thread
     }
 }
 
-void Gauss::SubtractElementsInRow(S21Matrix& matrix, double tmp, int i, int j) {
+void GaussAlgorithm::SubtractElementsInRow(S21Matrix& matrix, double tmp, int i, int j) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
         threads[thread_id] = std::thread(SubtractElementsInRowCycle, std::ref(matrix), tmp, i, j, thread_id);
@@ -78,7 +78,7 @@ void Gauss::SubtractElementsInRow(S21Matrix& matrix, double tmp, int i, int j) {
     JoinThreads(threads);
 }
 
-void Gauss::SubtractElementsInRowCycle(S21Matrix& matrix, double tmp, int i, int j, int thread_id) {
+void GaussAlgorithm::SubtractElementsInRowCycle(S21Matrix& matrix, double tmp, int i, int j, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(matrix.get_rows(), i - 1, false);
 
@@ -87,7 +87,7 @@ void Gauss::SubtractElementsInRowCycle(S21Matrix& matrix, double tmp, int i, int
     }
 }
 
-void Gauss::SubtractElementsInMatrix(S21Matrix& matrix, int i) {
+void GaussAlgorithm::SubtractElementsInMatrix(S21Matrix& matrix, int i) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
         threads[thread_id] = std::thread(SubtractElementsInMatrixCycle, std::ref(matrix), i, thread_id);
@@ -95,7 +95,7 @@ void Gauss::SubtractElementsInMatrix(S21Matrix& matrix, int i) {
     JoinThreads(threads);
 }
 
-void Gauss::SubtractElementsInMatrixCycle(S21Matrix& matrix, int i, int thread_id) {
+void GaussAlgorithm::SubtractElementsInMatrixCycle(S21Matrix& matrix, int i, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(i + 1, matrix.get_rows(), true);
 
@@ -104,7 +104,7 @@ void Gauss::SubtractElementsInMatrixCycle(S21Matrix& matrix, int i, int thread_i
     }
 }
 
-void Gauss::EquateResultsToRightValues(s21::S21Matrix& matrix, s21::S21Matrix& result) {
+void GaussAlgorithm::EquateResultsToRightValues(s21::S21Matrix& matrix, s21::S21Matrix& result) {
     std::vector<std::thread> threads(threads_in_level_);
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
         threads[thread_id] =
@@ -113,7 +113,7 @@ void Gauss::EquateResultsToRightValues(s21::S21Matrix& matrix, s21::S21Matrix& r
     JoinThreads(threads);
 }
 
-void Gauss::EquateResultsToRightValuesCycle(S21Matrix& matrix, S21Matrix& result, int thread_id) {
+void GaussAlgorithm::EquateResultsToRightValuesCycle(S21Matrix& matrix, S21Matrix& result, int thread_id) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(matrix.get_rows() - 2, -1, false);
 
@@ -122,7 +122,7 @@ void Gauss::EquateResultsToRightValuesCycle(S21Matrix& matrix, S21Matrix& result
     }
 }
 
-void Gauss::SubtractCalculatedVariables(s21::S21Matrix& matrix, s21::S21Matrix& result, int i) {
+void GaussAlgorithm::SubtractCalculatedVariables(s21::S21Matrix& matrix, s21::S21Matrix& result, int i) {
     std::vector<std::thread> threads(threads_in_level_);
     std::mutex mtx;
     for (int thread_id = 0; thread_id < threads_in_level_; ++thread_id) {
@@ -132,7 +132,7 @@ void Gauss::SubtractCalculatedVariables(s21::S21Matrix& matrix, s21::S21Matrix& 
     JoinThreads(threads);
 }
 
-void Gauss::SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i, int thread_id,
+void GaussAlgorithm::SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& result, int i, int thread_id,
                                              std::mutex& mtx) {
     std::pair<std::vector<int>, std::vector<int>> start_and_end_indices =
         InitializeStartAndEndIndices(i + 1, matrix.get_rows(), true);
@@ -145,7 +145,7 @@ void Gauss::SubtractCalculatedVariablesCycle(S21Matrix& matrix, S21Matrix& resul
     }
 }
 
-std::pair<std::vector<int>, std::vector<int>> Gauss::InitializeStartAndEndIndices(
+std::pair<std::vector<int>, std::vector<int>> GaussAlgorithm::InitializeStartAndEndIndices(
     int start_index, int end_index, bool start_is_less_than_end) {
     std::vector<int> start_indices(threads_in_level_);
     std::vector<int> end_indices(threads_in_level_);
@@ -163,7 +163,7 @@ std::pair<std::vector<int>, std::vector<int>> Gauss::InitializeStartAndEndIndice
     return {start_indices, end_indices};
 }
 
-void Gauss::JoinThreads(std::vector<std::thread>& threads) {
+void GaussAlgorithm::JoinThreads(std::vector<std::thread>& threads) {
     for (int i = 0; i < threads_in_level_; ++i) {
         threads[i].join();
     }

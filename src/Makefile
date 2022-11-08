@@ -1,7 +1,7 @@
 FLAGS = g++ -g -std=c++17 -Wall -Wextra -Werror
 
 COMMON = Algorithms/AbstractAlgorithm.cpp DataStructures/Matrix/Matrix.cpp
-GAUSS = ConsoleEngine/ConsoleForGauss/ConsoleForGauss.cpp Algorithms/Gauss/Gauss.cpp
+GAUSS = ConsoleEngine/ConsoleForGauss/ConsoleForGauss.cpp Algorithms/GaussAlgorithm/GaussAlgorithm.cpp
 WINOGRAD = ConsoleEngine/ConsoleForWinograd/*.cpp
 TEST = Tests/Tests.cpp
 
