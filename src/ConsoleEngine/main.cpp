@@ -1,7 +1,23 @@
-#include "ConsoleEngine.h"
+#ifdef ANT
+#include "ConsoleForAnt/ConsoleForAnt.h"
+#endif
+#ifdef GAUSS
+#include "ConsoleForGauss/ConsoleForGauss.h"
+#endif
+#ifdef WINOGRAD
+#include "ConsoleForWinograd/ConsoleForWinograd.h"
+#endif
 
 int main() {
-    s21::ConsoleEngine engine;
-    engine.start();
+#ifdef ANT
+    s21::ConsoleForAnt console;
+#endif
+#ifdef GAUSS
+    s21::ConsoleForGauss console;
+#endif
+#ifdef WINOGRAD
+    s21::ConsoleForWinograd console;
+#endif
+    console.start();
     return 0;
 }
