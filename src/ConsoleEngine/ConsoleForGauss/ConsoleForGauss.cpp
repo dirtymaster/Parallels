@@ -29,8 +29,9 @@ void ConsoleForGauss::RunAlgorithm() {
 
 void ConsoleForGauss::RequestParamsFromUser() {
     std::fstream fs = RequestFilenameFromUser();
-
-    matrix_ = *S21Matrix::ParseFileWithMatrix(fs);
+    S21Matrix* matrix = S21Matrix::ParseFileWithMatrix(fs);
+    matrix_ = *matrix;
+    delete matrix;
     number_of_repetitions_ = RequestNumberOfRepetitions();
 }
 

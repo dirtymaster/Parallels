@@ -39,5 +39,8 @@ test:
 	$(ANT) $(TEST) -o test.out -lgtest
 	./test.out
 
+leaks_check:
+	CK_FORKS=no leaks -atExit -- ./test.out
+
 clean:
 	rm -rf *.out *.out.dSYM
