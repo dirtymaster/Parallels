@@ -2,31 +2,31 @@
 #ifndef PARALLELS_CONSOLEFORWINOGRAD_H
 #define PARALLELS_CONSOLEFORWINOGRAD_H
 
-#include <iostream>
-#include <fstream>
-#include <cstring>
 #include <chrono>
-#include "../AbstractConsoleEngine.h"
-#include "../../DataStructures/Matrix/Matrix.h"
-#include "../../Algorithms/WinogradAlgorithm/WinogradAlgorithm.h"
+#include <cstring>
+#include <fstream>
+#include <iostream>
 
-using std::cout;
+#include "../../Algorithms/WinogradAlgorithm/WinogradAlgorithm.h"
+#include "../../DataStructures/Matrix/Matrix.h"
+#include "../AbstractConsoleEngine.h"
+
 using std::cin;
+using std::cout;
 using std::endl;
-using std::sscanf;
 using std::fstream;
+using std::sscanf;
 using std::string;
 
 namespace s21 {
 
 class ConsoleForWinograd : public AbstractConsoleEngine {
-
 public:
     ConsoleForWinograd();
 
 private:
-    S21Matrix *M1_;
-    S21Matrix *M2_;
+    S21Matrix *M1_ = nullptr;
+    S21Matrix *M2_ = nullptr;
     int rows_;
     int cols_;
 
@@ -44,10 +44,9 @@ private:
 
     bool GetMatrixInput(S21Matrix **mat);
     int RequestNmbFromUser(string message);
-    S21Matrix* ParseFileWithMatrix(fstream file);
-
+    S21Matrix *ParseFileWithMatrix(fstream file);
 };
 
 }  // namespace s21
 
-#endif //PARALLELS_CONSOLEFORWINOGRAD_H
+#endif  // PARALLELS_CONSOLEFORWINOGRAD_H
