@@ -11,6 +11,7 @@ namespace s21 {
 
     private:
         AntAlgorithm ant_solver_;
+        bool correct_data;
 
         void RequestParamsFromUser();
         void RunAlgorithm();

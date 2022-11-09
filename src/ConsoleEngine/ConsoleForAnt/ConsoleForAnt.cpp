@@ -1,7 +1,9 @@
 #include "ConsoleForAnt.h"
 
 namespace s21 {
-    ConsoleForAnt::ConsoleForAnt() : AbstractConsoleEngine() {}
+    ConsoleForAnt::ConsoleForAnt() : AbstractConsoleEngine() {
+        correct_data = true;
+    }
 
     void ConsoleForAnt::RequestParamsFromUser() {
         int N;
@@ -10,6 +12,11 @@ namespace s21 {
         int rows;
         std::cout << "Enter the edge of square matrix:\n";
         std::cin >> rows;
+        if (N < 0 || rows < 0) {
+            correct_data = false;
+            cout << "Wrong input data!\n";
+            return;
+        }
         S21Matrix matrix(rows, rows);
         // S21Matrix::FillMatrixWithRandValues(matrix);
         cout << "Fill the matrix:\n";
@@ -23,6 +30,9 @@ namespace s21 {
     }
 
     void ConsoleForAnt::RunAlgorithm() {
+        if (!correct_data) {
+            return;
+        }
         auto start = std::chrono::steady_clock::now();
         ant_solver_.SolveWithoutUsingParallelism();
         auto duration = std::chrono::steady_clock::now() - start;

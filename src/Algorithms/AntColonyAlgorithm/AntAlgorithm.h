@@ -36,6 +36,7 @@ namespace s21 {
         TsmResult shortest_path_;
         int N;
 
+        void FillEmptyNodes();
         void MainIteration(bool multithreading);
         void BuildPath(int end);
         void ApplyDeltaToPheromones();

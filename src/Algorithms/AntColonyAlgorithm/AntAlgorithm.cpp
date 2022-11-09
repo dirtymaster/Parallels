@@ -19,8 +19,26 @@ namespace s21 {
         return shortest_path_;
     }
 
+    void AntAlgorithm::FillEmptyNodes() {
+        double max = matrix_(0, 0);
+        for (int i = 0; i < matrix_.get_rows(); i++) {
+            for (int j = 0; j < matrix_.get_cols(); j++) {
+                max = std::max(max, matrix_(i, j));
+            }
+        }
+        for (int i = 0; i < matrix_.get_rows(); i++) {
+            for (int j = 0; j < matrix_.get_cols(); j++) {
+                if (i != j && matrix_(i, j) == 0.0) {
+                    max += 10.0;
+                    matrix_(i, j) = max;
+                }
+            }
+        }
+    }
+
     void AntAlgorithm::MainIteration(bool multithreading) {
         shortest_path_ = TsmResult({}, -1.0);
+        FillEmptyNodes();
         pheromones_ = pheromones_delta_ = S21Matrix(count_of_nodes_, count_of_nodes_);
         for (int i = 0; i < matrix_.get_rows(); ++i) {
             for (int j = 0; j < matrix_.get_cols(); ++j) {
@@ -30,16 +48,16 @@ namespace s21 {
             }
         }
         if (multithreading) {
-            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
-            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
-            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
-            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 500);
+            it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
+            it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
+            it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
+            it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
             it1.join();
             it2.join();
             it3.join();
             it4.join();
         } else {
-            AntColonyAlgorithm(2000);
+            AntColonyAlgorithm(20000);
         }
         for (size_t i = 0; i < shortest_path_.vertices.size(); ++i) {
             shortest_path_.vertices[i]++;
