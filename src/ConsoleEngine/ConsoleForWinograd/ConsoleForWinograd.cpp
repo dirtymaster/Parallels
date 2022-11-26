@@ -4,9 +4,10 @@
 namespace s21 {
 
 ConsoleForWinograd::ConsoleForWinograd() : AbstractConsoleEngine() {
-    start_message_ = "Hello. This program allows to test performance in "
-                     "Winograd matrix multiplication method and "
-                     "compare multithreading and single thread realisation.\n";
+    start_message_ =
+        "Hello. This program allows to test performance in "
+        "Winograd matrix multiplication method and "
+        "compare multithreading and single thread realisation.\n";
 }
 
 void ConsoleForWinograd::RequestParamsFromUser() {
@@ -51,17 +52,14 @@ void ConsoleForWinograd::RequestParamsFromUser() {
     }
 }
 
-
 void ConsoleForWinograd::RunAlgorithm() {
     cout << "Running algorithms..." << std::flush;
     auto start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < nmb_of_repeats_; i++)
-        winograd_algorithm_.SolveWithoutParallelism(M1_, M2_);
+    for (int i = 0; i < nmb_of_repeats_; i++) winograd_algorithm_.SolveWithoutParallelism(M1_, M2_);
     duration_without_parallelism_ = std::chrono::high_resolution_clock::now() - start;
 
     start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < nmb_of_repeats_; i++)
-        winograd_algorithm_.SolveWithPipelineParallelism(M1_, M2_);
+    for (int i = 0; i < nmb_of_repeats_; i++) winograd_algorithm_.SolveWithPipelineParallelism(M1_, M2_);
     duration_with_pipeline_parallelism_ = std::chrono::high_resolution_clock::now() - start;
 
     start = std::chrono::high_resolution_clock::now();
@@ -74,8 +72,10 @@ void ConsoleForWinograd::RunAlgorithm() {
 void ConsoleForWinograd::PrintResult() {
     cout << "Results:" << endl;
     cout << "Duration without parallelism: " << duration_without_parallelism_.count() << "s" << endl;
-    cout << "Duration with pipeline parallelism: " << duration_with_pipeline_parallelism_.count() << "s" << endl;
-    cout << "Duration with classic parallelism: " << duration_with_classic_parallelism_.count() << "s" << endl;
+    cout << "Duration with pipeline parallelism: " << duration_with_pipeline_parallelism_.count() << "s"
+         << endl;
+    cout << "Duration with classic parallelism: " << duration_with_classic_parallelism_.count() << "s"
+         << endl;
     cout << endl;
 }
 
@@ -124,4 +124,4 @@ int ConsoleForWinograd::RequestNmbFromUser(string message) {
     return nmb;
 }
 
-}
+}  // namespace s21

@@ -3,8 +3,8 @@ namespace s21 {
 int GaussAlgorithm::threads_in_level_;
 
 std::pair<double, double> GaussAlgorithm::MeasureTime(S21Matrix matrix,
-                                                         std::pair<S21Matrix, S21Matrix>& results,
-                                                         int number_of_repetitions) {
+                                                      std::pair<S21Matrix, S21Matrix>& results,
+                                                      int number_of_repetitions) {
     std::pair<double, double> times;
     auto start_time = std::chrono::high_resolution_clock::now();
     results.first = SolveWithoutUsingParallelism(matrix);  // записываем результат работы

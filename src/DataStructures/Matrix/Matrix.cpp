@@ -140,10 +140,10 @@ void S21Matrix::operator-=(const S21Matrix &other) { sub_matrix(other); }
 void S21Matrix::operator*=(const S21Matrix &other) { mul_matrix(other); }
 
 double &S21Matrix::operator()(const int i, const int j) {
-//    if (i >= _rows || i < 0 || j >= _cols || j < 0) {
-//        printf("Out of bounds i = %d, j = %d\n", i, j);
-//        exit(1);
-//    }
+    //    if (i >= _rows || i < 0 || j >= _cols || j < 0) {
+    //        printf("Out of bounds i = %d, j = %d\n", i, j);
+    //        exit(1);
+    //    }
     return _matrix[i][j];
 }
 
@@ -165,9 +165,7 @@ void S21Matrix::set_columns(int new_cols) {
     (*this) = new_matrix;
 }
 
-bool S21Matrix::is_empty() {
-    return !get_rows() && !get_cols();
-}
+bool S21Matrix::is_empty() { return !get_rows() && !get_cols(); }
 
 void S21Matrix::Print_matrix(s21::S21Matrix &m1) {
     for (int i = 0; i < m1.get_rows(); i++) {
@@ -187,7 +185,7 @@ void S21Matrix::FillMatrixWithRandValues(s21::S21Matrix *m) {
     }
 }
 
-s21::S21Matrix* S21Matrix::ParseFileWithMatrix(std::fstream &file) {
+s21::S21Matrix *S21Matrix::ParseFileWithMatrix(std::fstream &file) {
     int rows = 0, cols = 0;
     file >> rows >> cols;
     if (rows <= 0 || cols <= 0) {

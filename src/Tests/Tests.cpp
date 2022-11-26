@@ -6,7 +6,6 @@
 #include "../Algorithms/GaussAlgorithm/GaussAlgorithm.h"
 #include "../Algorithms/WinogradAlgorithm/WinogradAlgorithm.h"
 #include "../ConsoleEngine/ConsoleForGauss/ConsoleForTestingGauss/ConsoleForTestingGauss.h"
-#include "../DataStructures/Matrix/Matrix.h"
 
 TEST(AntAlgorithmTests, Test1) {
     s21::S21Matrix matrix1(10, 10);
@@ -220,53 +219,36 @@ TEST(GaussAlgoTests, Rows3Cols4) {
 }
 
 TEST(GaussAlgoTests, Rows4Cols5) {
-   s21::S21Matrix expected(1, 4);
-   expected(0, 0) = -3;
-   expected(0, 1) = -1;
-   expected(0, 2) = 2;
-   expected(0, 3) = 7;
-   s21::ConsoleForTestingGauss console;
+    s21::S21Matrix expected(1, 4);
+    expected(0, 0) = -3;
+    expected(0, 1) = -1;
+    expected(0, 2) = 2;
+    expected(0, 3) = 7;
+    s21::ConsoleForTestingGauss console;
 
-   std::string filename = "TextFiles/GaussMethod2.txt";
-   console.SetFileName(filename);
-   console.SetNumberOfRepetitions(1);
-   console.RequestParamsFromUserForTest();
-   console.RunAlgorithmForTest();
-   EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == expected);
-   EXPECT_TRUE(console.GetResultUsingParallelism() == expected);
+    std::string filename = "TextFiles/GaussMethod2.txt";
+    console.SetFileName(filename);
+    console.SetNumberOfRepetitions(1);
+    console.RequestParamsFromUserForTest();
+    console.RunAlgorithmForTest();
+    EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == expected);
+    EXPECT_TRUE(console.GetResultUsingParallelism() == expected);
 }
 
 TEST(GaussAlgoTests, Rows99Cols100) {
-   s21::ConsoleForTestingGauss console;
+    s21::ConsoleForTestingGauss console;
 
-   std::string filename = "TextFiles/GaussMethod3.txt";
-   console.SetFileName(filename);
-   console.SetNumberOfRepetitions(1);
-   console.RequestParamsFromUserForTest();
-   console.RunAlgorithmForTest();
-   EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == console.GetResultUsingParallelism());
+    std::string filename = "TextFiles/GaussMethod3.txt";
+    console.SetFileName(filename);
+    console.SetNumberOfRepetitions(1);
+    console.RequestParamsFromUserForTest();
+    console.RunAlgorithmForTest();
+    EXPECT_TRUE(console.GetResultWithoutUsingParallelism() == console.GetResultUsingParallelism());
 }
 
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-
-    //    if (argc && argv) {;}
-    //    s21::S21Matrix m1(6, 11);
-    //    s21::S21Matrix m2(11, 6);
-    //    s21::S21Matrix::FillMatrixWithRandValues(m1);
-    //    s21::S21Matrix::FillMatrixWithRandValues(m2);
-    //    s21::WinogradAlgorithm algorithm;
-    //
-    //    s21::S21Matrix expected = m1 * m2;
-    //    s21::S21Matrix res1 = algorithm.SolveWithoutParallelism(&m1, &m2);
-    //    s21::S21Matrix res2 = algorithm.SolveWithPipelineParallelism(&m1, &m2);
-    //    s21::S21Matrix res3 = algorithm.SolveWithClassicParallelism(&m1, &m2);
-    //
-    //    s21::S21Matrix::Print_matrix(res1);
-    //    s21::S21Matrix::Print_matrix(res2);
-    //    s21::S21Matrix::Print_matrix(res3);
-    //    s21::S21Matrix::Print_matrix(expected);
 
     return 0;
 }
