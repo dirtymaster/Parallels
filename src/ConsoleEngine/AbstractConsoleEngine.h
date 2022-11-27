@@ -13,7 +13,7 @@ namespace s21 {
 class AbstractConsoleEngine {
 public:
     AbstractConsoleEngine() {}
-    ~AbstractConsoleEngine() {}
+    virtual ~AbstractConsoleEngine() {}
 
     void start() {
         cout << start_message_ << endl;
