@@ -42,16 +42,17 @@ void AntAlgorithm::MainIteration(bool multithreading) {
         }
     }
     if (multithreading) {
-        it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
-        it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
-        it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
-        it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 5000);
+        std::thread it1, it2, it3, it4;
+        it1 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 300);
+        it2 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 300);
+        it3 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 300);
+        it4 = std::thread(&AntAlgorithm::AntColonyAlgorithm, this, 300);
         it1.join();
         it2.join();
         it3.join();
         it4.join();
     } else {
-        AntColonyAlgorithm(20000);
+        AntColonyAlgorithm(1200);
     }
     for (size_t i = 0; i < shortest_path_.vertices.size(); ++i) {
         shortest_path_.vertices[i]++;

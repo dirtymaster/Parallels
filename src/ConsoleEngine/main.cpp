@@ -9,15 +9,17 @@
 #endif
 
 int main() {
+    s21::AbstractConsoleEngine *console;
 #ifdef ANT
-    s21::ConsoleForAnt console;
+    console = new s21::ConsoleForAnt;
 #endif
 #ifdef GAUSS
-    s21::ConsoleForGauss console;
+    console = new s21::ConsoleForGauss;
 #endif
 #ifdef WINOGRAD
-    s21::ConsoleForWinograd console;
+    console = new s21::ConsoleForWinograd;
 #endif
-    console.start();
+    console->start();
+    delete console;
     return 0;
 }

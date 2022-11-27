@@ -30,7 +30,6 @@ public:
 
 private:
     S21Matrix pheromones_, pheromones_delta_, matrix_;
-    std::thread it1, it2, it3, it4;
     std::mutex mt;
     double count_of_nodes_, max_length_;
     TsmResult shortest_path_;
