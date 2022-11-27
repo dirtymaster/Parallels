@@ -11,8 +11,14 @@ public:
 
 private:
     AntAlgorithm ant_solver_;
-    bool correct_data;
+    TsmResult multithread_result_, single_thread_result_;
 
+    std::chrono::duration<double> duration_without_parallelism_;
+    std::chrono::duration<double> duration_with_parallelism_;
+
+    void ShowData(double time, TsmResult &path);
+    int InputValue(int bottom_border);
+    void WrongInputMessage();
     void RequestParamsFromUser();
     void RunAlgorithm();
     void PrintResult();
