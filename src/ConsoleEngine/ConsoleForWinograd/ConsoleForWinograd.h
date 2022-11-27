@@ -23,6 +23,7 @@ namespace s21 {
 class ConsoleForWinograd : public AbstractConsoleEngine {
 public:
     ConsoleForWinograd();
+    ~ConsoleForWinograd();
 
 private:
     S21Matrix *M1_ = nullptr;

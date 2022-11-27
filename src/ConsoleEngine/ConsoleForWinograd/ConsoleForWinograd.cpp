@@ -10,6 +10,11 @@ ConsoleForWinograd::ConsoleForWinograd() : AbstractConsoleEngine() {
         "compare multithreading and single thread realisation.\n";
 }
 
+ConsoleForWinograd::~ConsoleForWinograd() {
+    if (M1_) delete M1_;
+    if (M2_) delete M2_;
+}
+
 void ConsoleForWinograd::RequestParamsFromUser() {
     if (M1_) {
         delete M1_;
