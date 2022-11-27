@@ -31,14 +31,17 @@ void ConsoleForWinograd::RequestParamsFromUser() {
         cols_ = 0;
     }
     cout << "First matrix has been load successfully, specify second matrix: ";
+
     while (!GetMatrixInput(&M2_)) {
         rows_ = 0;
         cols_ = 0;
     }
     cout << "Second matrix has been load successfully." << endl;
+
     if (M1_->get_cols() != M2_->get_rows()) {
-        cout << "Columns of the first matrix should be equal rows of the second matrix" << endl;
+        cout << "Columns of the first matrix should be equal rows of the second matrix\n" << endl;
         RequestParamsFromUser();
+        return;
     } else {
         while ((nmb_of_repeats_ = RequestNmbFromUser("Enter number of repeats: ")) <= 0) {
             cout << "Invalid number of repeats, try again pls" << endl;
@@ -50,22 +53,73 @@ void ConsoleForWinograd::RequestParamsFromUser() {
             nmb_of_threads_ = RequestNmbFromUser("Enter number of threads for classic parallelism: ");
         }
     }
+    
+    need_to_print_values_ = AskUserAboutPrintingValues();
 }
 
 void ConsoleForWinograd::RunAlgorithm() {
     cout << "Running algorithms..." << std::flush;
+    S21Matrix result;
+
+    if (need_to_print_values_) {
+        cout << "First matrix:" << endl;
+        S21Matrix::Print_matrix(*M1_);
+        cout << "Second matrix:" << endl;
+        S21Matrix::Print_matrix(*M2_);
+    }
+
     auto start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < nmb_of_repeats_; i++) winograd_algorithm_.SolveWithoutParallelism(M1_, M2_);
+
+    for (int i = 0; i < nmb_of_repeats_; i++) {
+        if (need_to_print_values_ && i == nmb_of_repeats_ - 1) {
+            result = winograd_algorithm_.SolveWithoutParallelism(M1_, M2_);
+        } else {
+            winograd_algorithm_.SolveWithoutParallelism(M1_, M2_);
+        }
+    }
+
+    if (need_to_print_values_) {
+        cout << "\nResult matrix values from method without parallelism: " << endl;
+        S21Matrix::Print_matrix(result);
+    }
+
     duration_without_parallelism_ = std::chrono::high_resolution_clock::now() - start;
 
     start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < nmb_of_repeats_; i++) winograd_algorithm_.SolveWithPipelineParallelism(M1_, M2_);
+
+    for (int i = 0; i < nmb_of_repeats_; i++) {
+        if (need_to_print_values_&& i == nmb_of_repeats_ - 1) {
+            result = winograd_algorithm_.SolveWithPipelineParallelism(M1_, M2_);
+        } else {
+            result = winograd_algorithm_.SolveWithPipelineParallelism(M1_, M2_);
+        }
+
+    }
+
     duration_with_pipeline_parallelism_ = std::chrono::high_resolution_clock::now() - start;
 
+    if (need_to_print_values_) {
+        cout << "Result matrix values from method with pipeline parallelism: " << endl;
+        S21Matrix::Print_matrix(result);
+    }
+
     start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < nmb_of_repeats_; i++)
-        winograd_algorithm_.SolveWithClassicParallelism(M1_, M2_, nmb_of_threads_);
+
+    for (int i = 0; i < nmb_of_repeats_; i++) {
+        if (need_to_print_values_ && i == nmb_of_repeats_ - 1) {
+            result = winograd_algorithm_.SolveWithClassicParallelism(M1_, M2_, nmb_of_threads_);
+        } else {
+            winograd_algorithm_.SolveWithClassicParallelism(M1_, M2_, nmb_of_threads_);
+        }
+    }
+
     duration_with_classic_parallelism_ = std::chrono::high_resolution_clock::now() - start;
+
+    if (need_to_print_values_) {
+        cout << "Result matrix values from method with classic parallelism: " << endl;
+        S21Matrix::Print_matrix(result);
+    }
+
     cout << "Done" << endl;
 }
 
@@ -114,7 +168,7 @@ bool ConsoleForWinograd::GetMatrixInput(S21Matrix **mat) {
 int ConsoleForWinograd::RequestNmbFromUser(string message) {
     std::string input;
     cout << message;
-    cin >> input;
+    std::getline(cin, input);
     int nmb;
     try {
         nmb = std::stoi(input);
@@ -122,6 +176,17 @@ int ConsoleForWinograd::RequestNmbFromUser(string message) {
         nmb = 0;
     }
     return nmb;
+}
+
+bool ConsoleForWinograd::AskUserAboutPrintingValues() {
+    if (M1_->get_cols() <= 0 || M2_->get_cols() <= 0 || M1_->get_rows() <= 0 || M2_->get_rows() <= 0) {
+        return false;
+    }
+
+    string answer;
+    cout << "Do you want to print matrix values (not recomended for big matrices)? y/n: ";
+    std::getline(cin, answer);
+    return answer.size() == 1 && (answer.at(0) == 'y' || answer.at(0) == 'Y');
 }
 
 }  // namespace s21

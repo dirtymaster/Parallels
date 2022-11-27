@@ -34,6 +34,8 @@ private:
     int nmb_of_repeats_;
     int nmb_of_threads_;
 
+    bool need_to_print_values_;
+
     std::chrono::duration<double> duration_without_parallelism_;
     std::chrono::duration<double> duration_with_pipeline_parallelism_;
     std::chrono::duration<double> duration_with_classic_parallelism_;
@@ -42,6 +44,7 @@ private:
     void RunAlgorithm();
     void PrintResult();
 
+    bool AskUserAboutPrintingValues();
     bool GetMatrixInput(S21Matrix **mat);
     int RequestNmbFromUser(string message);
     S21Matrix *ParseFileWithMatrix(fstream file);
