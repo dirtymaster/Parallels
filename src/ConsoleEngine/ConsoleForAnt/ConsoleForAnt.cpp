@@ -30,10 +30,10 @@ void ConsoleForAnt::RequestParamsFromUser() {
     rows = InputValue(2);
     S21Matrix matrix(rows, rows);
     std::cout << "Press 0 if you want to fill matrix by yourself "\
-                "or 1 if you want to fill matrix with random values\n";
-    bool rand;
+                "or other value if you want to fill matrix with random values\n";
+    int rand;
     std::cin >> rand;
-    if (rand) {
+    if (rand != 0) {
         S21Matrix::FillMatrixWithRandValues(&matrix);
     } else {
         cout << "Fill the matrix:\n";
