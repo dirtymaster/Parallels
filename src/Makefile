@@ -25,6 +25,8 @@ TEST_BINARY = test.out
 
 all: ant_build gauss_build winograd_build
 
+
+
 ant_build:
 	$(FLAGS) -DANT $(ANT_ALGO) $(MATRIX) $(ANT_CONSOLE) $(MAIN) -o $(ANT_BINARY)
 
@@ -32,6 +34,8 @@ ant_start:
 	./$(ANT_BINARY)
 
 ant: ant_build ant_start
+
+
 
 gauss_build:
 	$(FLAGS) -DGAUSS $(GAUSS_ALGO) $(GAUSS_CONSOLE) $(MATRIX) $(MAIN) -o $(GAUSS_BINARY)
@@ -41,6 +45,8 @@ gauss_start:
 
 gauss: gauss_build gauss_start
 
+
+
 winograd_build:
 	$(FLAGS) -DWINOGRAD $(WINOGRAD_ALGO) $(WINOGRAD_CONSOLE) $(MATRIX) $(MAIN) -o $(WINOGRAD_BINARY)
 
@@ -48,6 +54,8 @@ winograd_start:
 	./$(WINOGRAD_BINARY)
 
 winograd: winograd_build winograd_start
+
+
 
 test:
 	$(FLAGS) $(MATRIX) \

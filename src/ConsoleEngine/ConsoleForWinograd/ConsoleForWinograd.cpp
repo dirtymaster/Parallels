@@ -46,7 +46,7 @@ void ConsoleForWinograd::RequestParamsFromUser() {
 
         nmb_of_threads_ = RequestNmbFromUser("Enter number of threads for classic parallelism: ");
         while (nmb_of_threads_ <= 0 || nmb_of_threads_ % 2 != 0 || nmb_of_threads_ > 24) {
-            cout << "Invalid number of thread, try again pls" << endl;
+            cout << "Invalid number of thread,valid numbers are: 2, 4, 6, ... 24" << endl;
             nmb_of_threads_ = RequestNmbFromUser("Enter number of threads for classic parallelism: ");
         }
     }
@@ -70,20 +70,19 @@ void ConsoleForWinograd::RunAlgorithm() {
 }
 
 void ConsoleForWinograd::PrintResult() {
-    cout << "Results:" << endl;
-    cout << "Duration without parallelism: " << duration_without_parallelism_.count() << "s" << endl;
-    cout << "Duration with pipeline parallelism: " << duration_with_pipeline_parallelism_.count() << "s"
-         << endl;
-    cout << "Duration with classic parallelism: " << duration_with_classic_parallelism_.count() << "s"
-         << endl;
-    cout << endl;
+    printf("Results:\n"
+    "Duration without parallelism: %lfs\n"
+    "Duration with pipeline parallelism: %lfs\n"
+    "Duration with classic parallelism: %lfs\n\n", duration_without_parallelism_.count(),
+                                                duration_with_pipeline_parallelism_.count(), 
+                                                duration_with_classic_parallelism_.count());
 }
 
 bool ConsoleForWinograd::GetMatrixInput(S21Matrix **mat) {
     string input;
     std::getline(cin, input);
     char ch;
-    printf("string = [%s]\n", input.c_str());
+
     if (sscanf(input.data(), "%d%c%d", &rows_, &ch, &cols_) == 3 && ch == ' ') {
         if (rows_ <= 0 || cols_ <= 0) {
             cout << "Invalid number of rows, cols, try again pls: ";
@@ -95,12 +94,13 @@ bool ConsoleForWinograd::GetMatrixInput(S21Matrix **mat) {
     } else {
         fstream file(input);
         if (!file) {
-            cout << "Invalid input, you need to enter file name or matrix dimensions. Try again pls: ";
+            cout << "Invalid input, you need to enter file name or matrix dimensions(N M). Try again pls: ";
             return false;
         }
         *mat = S21Matrix::ParseFileWithMatrix(file);
         if (*mat == nullptr) {
-            cout << "Error during parsing file, try again pls: ";
+            cout << "Error during parsing file, file has worng matrix dimensons or format, try again pls." << endl;
+            cout << "Enter file name or matrix dimensions(N M): "; 
             return false;
         }
         S21Matrix::FillMatrixWithRandValues(*mat);
