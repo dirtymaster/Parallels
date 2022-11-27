@@ -14,8 +14,11 @@ void ConsoleForGauss::PrintResult() {
     cout << "Output using parallelism:" << endl;
     PrintMatrix(results_.second);
     if (!result_without_using_parallelism_.is_empty() && !result_using_parallelism_.is_empty()) {
-        cout << "Seconds spent without using parallelism: " << times_.first << endl;
-        cout << "Seconds spent using parallelism: " << times_.second << endl;
+        cout << "Seconds spent without using parallelism: ";
+        printf("%.6lf", times_.first);
+        cout << endl << "Seconds spent using parallelism: ";
+        printf("%.6lf", times_.second);
+        cout << endl;
     }
 }
 
@@ -30,6 +33,14 @@ void ConsoleForGauss::RunAlgorithm() {
 void ConsoleForGauss::RequestParamsFromUser() {
     std::fstream fs = RequestFilenameFromUser();
     S21Matrix* matrix = S21Matrix::ParseFileWithMatrix(fs);
+    while (!matrix || matrix->get_rows() + 1 != matrix->get_cols() || matrix->get_rows() < 2) {
+        cout << "The number of columns must be 1 more than the number of rows. "
+                "The number of rows must be greater than or equal to 2."
+             << endl;
+        filename_ = "";
+        std::fstream fs = RequestFilenameFromUser();
+        S21Matrix* matrix = S21Matrix::ParseFileWithMatrix(fs);
+    }
     matrix_ = *matrix;
     delete matrix;
     number_of_repetitions_ = RequestNumberOfRepetitions();
@@ -79,10 +90,10 @@ void ConsoleForGauss::PrintMatrix(S21Matrix matrix) {
 }
 
 void ConsoleForGauss::GenerateRandomMatrix() {
-    std::string filename = "/Users/rafael/Projects/Parallels/src/TextFiles/GaussMethod4.txt";
-    std::fstream fs(filename, std::fstream::out);
-    int rows = 9999;
-    int cols = 10000;
+    cin >> filename_;
+    std::fstream fs(filename_, std::fstream::out);
+    int rows = 1999;
+    int cols = 2000;
     fs << rows << " " << cols << endl;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {

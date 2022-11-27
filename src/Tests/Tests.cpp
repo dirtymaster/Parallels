@@ -209,7 +209,7 @@ TEST(GaussAlgoTests, Rows3Cols4) {
     expected(0, 2) = 3;
     s21::ConsoleForTestingGauss console;
 
-    std::string filename = "TextFiles/GaussMethod1.txt";
+    std::string filename = "TextFiles/Matrix1.txt";
     console.SetFileName(filename);
     console.SetNumberOfRepetitions(1);
     console.RequestParamsFromUserForTest();
@@ -226,7 +226,7 @@ TEST(GaussAlgoTests, Rows4Cols5) {
     expected(0, 3) = 7;
     s21::ConsoleForTestingGauss console;
 
-    std::string filename = "TextFiles/GaussMethod2.txt";
+    std::string filename = "TextFiles/Matrix2.txt";
     console.SetFileName(filename);
     console.SetNumberOfRepetitions(1);
     console.RequestParamsFromUserForTest();
@@ -238,7 +238,7 @@ TEST(GaussAlgoTests, Rows4Cols5) {
 TEST(GaussAlgoTests, Rows99Cols100) {
     s21::ConsoleForTestingGauss console;
 
-    std::string filename = "TextFiles/GaussMethod3.txt";
+    std::string filename = "TextFiles/Matrix3.txt";
     console.SetFileName(filename);
     console.SetNumberOfRepetitions(1);
     console.RequestParamsFromUserForTest();
