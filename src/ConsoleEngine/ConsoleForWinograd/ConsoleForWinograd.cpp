@@ -157,13 +157,12 @@ bool ConsoleForWinograd::GetMatrixInput(S21Matrix **mat) {
             return false;
         }
         *mat = S21Matrix::ParseFileWithMatrix(file);
+        file.close();
         if (*mat == nullptr) {
             cout << "Error during parsing file, file has worng matrix dimensons or format, try again pls." << endl;
             cout << "Enter file name or matrix dimensions(N M): "; 
             return false;
         }
-        S21Matrix::FillMatrixWithRandValues(*mat);
-        file.close();
     }
     rows_ = 0;
     cols_ = 0;
