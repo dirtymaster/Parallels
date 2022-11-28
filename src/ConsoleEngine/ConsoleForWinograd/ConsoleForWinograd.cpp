@@ -67,7 +67,7 @@ void ConsoleForWinograd::RunAlgorithm() {
     S21Matrix result;
 
     if (need_to_print_values_) {
-        cout << "First matrix:" << endl;
+        cout << "\nFirst matrix:" << endl;
         S21Matrix::Print_matrix(*M1_);
         cout << "Second matrix:" << endl;
         S21Matrix::Print_matrix(*M2_);

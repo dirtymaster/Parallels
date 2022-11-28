@@ -39,7 +39,7 @@ void ConsoleForGauss::RequestParamsFromUser() {
              << endl;
         filename_ = "";
         std::fstream fs = RequestFilenameFromUser();
-        S21Matrix* matrix = S21Matrix::ParseFileWithMatrix(fs);
+        matrix = S21Matrix::ParseFileWithMatrix(fs);
     }
     matrix_ = *matrix;
     delete matrix;

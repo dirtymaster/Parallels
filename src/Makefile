@@ -1,4 +1,4 @@
-FLAGS = g++ -g -std=c++17 #-Wall -Wextra -Werror
+FLAGS = g++ -g -std=c++17 -Wall -Wextra -Werror
 
 MATRIX = DataStructures/Matrix/Matrix.cpp
 MATRIX_H = DataStructures/Matrix/Matrix.h
